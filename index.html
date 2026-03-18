@@ -1167,7 +1167,97 @@
 
 <script>
   let products = [];
-  // --- 坐标：替换 products = []; 之后的所有旧代码，一直到 </script> 之前 ---
+ // --- 以下是修复后的核心功能代码 ---
+
+  // 1. 文件上传监听
+  function handleUpload(e) {
+    handleFiles(Array.from(e.target.files));
+    e.target.value = ''; // 清空 input 方便重复上传
+  }
+
+  function handleFiles(files) {
+    files.forEach((file, i) => {
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const baseName = file.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ');
+        products.push({
+          id: Date.now() + i + Math.random(),
+          name: baseName,
+          type: PRODUCT_TYPES[products.length % PRODUCT_TYPES.length],
+          src: ev.target.result, // 这是图片的 base64 字符串
+          selected: true
+        });
+        renderGrid(); // 重新渲染网格
+        updatePreview(); // 更新侧边栏预览
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // 2. 渲染产品网格
+  function renderGrid() {
+    const grid = document.getElementById('productGrid');
+    if (!grid) return;
+    const total = products.length;
+    const sel = products.filter(p => p.selected).length;
+    
+    document.getElementById('counterRow').style.display = total > 0 ? 'flex' : 'none';
+    document.getElementById('totalCount').textContent = total;
+    document.getElementById('selCount').textContent = sel;
+
+    grid.innerHTML = '';
+    products.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'product-card' + (p.selected ? ' selected' : '');
+      const safeId = 'p' + String(p.id).replace(/[^a-z0-9]/gi,'');
+      card.innerHTML = `
+        <button class="del-btn" onclick="deleteProduct('${p.id}', event)">×</button>
+        <div class="product-check">
+          <svg viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2 2L7.5 2" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <img src="${p.src}" class="product-thumb" alt="">
+        <div class="product-info">
+          <input class="product-name-input" type="text" value="${p.name}"
+            onclick="event.stopPropagation()"
+            onchange="updateProductName('${p.id}', this.value)"
+            placeholder="产品名称">
+          <input class="product-type-input" type="text" value="${p.type.split('/')[0]}"
+            list="type-suggestions-${safeId}"
+            onclick="event.stopPropagation()"
+            onchange="updateProductType('${p.id}', this.value)">
+          <datalist id="type-suggestions-${safeId}">
+            ${PRODUCT_TYPES.map(t => `<option value="${t.split('/')[0]}">`).join('')}
+          </datalist>
+        </div>`;
+      card.addEventListener('click', () => { p.selected = !p.selected; renderGrid(); updatePreview(); });
+      grid.appendChild(card);
+    });
+  }
+
+  // 3. 辅助功能（删除、重命名）
+  function deleteProduct(id, e) {
+    e.stopPropagation();
+    products = products.filter(p => p.id != id);
+    renderGrid(); updatePreview();
+  }
+
+  function updateProductName(id, val) {
+    const p = products.find(x => x.id == id);
+    if (p) { p.name = val; updatePreview(); }
+  }
+
+  function updateProductType(id, val) {
+    const p = products.find(x => x.id == id);
+    if (p) p.type = val;
+  }
+
+  function toggleSelectAll() {
+    allSelected = !allSelected;
+    products.forEach(p => p.selected = allSelected);
+    renderGrid(); updatePreview();
+  }
+  
+  // --- 修复结束，下面继续你之前的逻辑 ---
 
   let selectedStyle = '法式清新';
   let allSelected = true;
