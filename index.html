@@ -1470,124 +1470,76 @@
 
   document.getElementById('brandName').addEventListener('input', updatePreview);
 
-  function generatePrompt() {
+  // 坐标：大约在 1410 行开始替换
+  async function generatePrompt() {
     const selected = products.filter(p => p.selected);
     if (selected.length === 0) { alert('请先上传并选择至少一件产品图片'); return; }
+    
     const brand = document.getElementById('brandName').value || 'RH FACTORY';
     const room = document.getElementById('roomType').value;
-    const wall = document.getElementById('wallColor').value;
-    const floor = document.getElementById('floorType').value;
-    const light = document.getElementById('lightMood').value;
-    const plant = document.getElementById('plantType').value;
-    const rug = document.getElementById('rugType').value;
-    const model = document.getElementById('modelType').value;
-    const extra = document.getElementById('extraNotes').value.trim();
     const styleGuide = STYLE_GUIDES[selectedStyle] || selectedStyle;
-    const productLines = selected.map((p, i) => `  Image ${i+1}: ${p.name} (${p.type})`).join('\n');
-    const half = Math.ceil(selected.length / 2);
-    const gridRow1 = selected.slice(0, half).map((p, i) => `  ${i+1}. ${p.name} — ${p.type}`).join('\n');
-    const gridRow2 = selected.slice(half).map((p, i) => `  ${half+i+1}. ${p.name} — ${p.type}`).join('\n');
-    const modelLine = model === 'none' ? 'No model — keep the scene clean and product-focused.' : `Include a female model: ${model}. Standing naturally left of center, proportioned to furniture, subtle ground shadow, do not change her outfit.`;
-
-    // Build smart furniture placement rules based on selected product types
+    const extra = document.getElementById('extraNotes').value.trim();
     const placementRules = buildPlacementRules(selected, room);
 
-    const prompt = `I am providing ${selected.length} product images. Use ALL of them EXACTLY as shown.
-DO NOT redesign, recolor, or replace any product. These products are LOCKED.
+    // 拼接给 AI 的指令
+    const prompt = `Style: ${styleGuide}. Room: ${room}. Rules: ${placementRules}. ${extra ? `Extra: ${extra}` : ''}`;
 
-================================================================
-ATTACHED PRODUCTS — use these images exactly as-is:
-================================================================
-${productLines}
-
-================================================================
-LAYOUT: ${brand} Soft Furnishing Mood Board (portrait, 3:4 ratio)
-================================================================
-
-TOP SECTION (upper 58%): Photorealistic ${room} lifestyle scene
-
-Overall style: ${styleGuide}
-
-Environment (use exactly these settings):
-- Walls: ${wall}
-- Floor: ${floor}
-- Lighting: ${light}
-- Greenery / plants: ${plant}
-- Rug: ${rug}
-- ${modelLine}
-
-================================================================
-INTERIOR DESIGN PLACEMENT RULES — follow strictly:
-================================================================
-${placementRules}
-
-================================================================
-SPATIAL LOGIC — must be realistic and professionally correct:
-================================================================
-FLOOR ITEMS (must sit on the floor, never on walls or ceiling):
-- Sofas, sectionals: against wall or floating with walkable space behind, NEVER floating mid-air
-- Coffee tables: centered in front of sofa, on top of rug if rug is present
-- Rugs: flat on floor ONLY, under the seating arrangement, NEVER on walls or vertical surfaces
-- Side tables / accent tables: beside sofa armrest or beside lounge chair, at arm height
-- Floor lamps: standing upright on floor beside sofa or chair, NEVER horizontal
-- Lounge chairs / armchairs: angled toward sofa at 30-45 degrees, facing the conversation area
-- Cabinets / sideboards: flush against wall, upright, NEVER tilted or floating
-- Sculptures / decorative objects: on floor, coffee table surface, or cabinet top only
-
-WALL ITEMS (must be mounted on wall surface):
-- Wall art / paintings: hung on wall at eye level (150-160cm center height), NEVER on floor leaning, NEVER on ceiling
-- Mirrors: hung on wall, NEVER on floor or ceiling
-
-CEILING ITEMS (must hang from ceiling):
-- Chandeliers / pendant lights: hanging from ceiling directly above the seating area center, NEVER sitting on furniture
-
-SURFACES:
-- Vases, decorative bowls, books: on coffee table top, side table top, or cabinet top ONLY
-- Nothing floats in mid-air
-
-PROPORTIONS:
-- All furniture must be correctly scaled relative to each other and to a human figure
-- A standard sofa is 85-90cm tall, coffee table is 40-45cm tall, side table is 55-65cm tall
-- Ceiling height should be 280-320cm for a realistic room feel
-
-================================================================
-BOTTOM SECTION (lower 42%): Product catalog grid
-================================================================
-Background: light warm white (#F8F6F2)
-Dashed thin border rectangle around all product cells
-Top-right: "Living room soft decoration design scheme"
-
-Row 1:
-${gridRow1}
-
-Row 2:
-${gridRow2}
-
-Each cell: white background, product centered, circled number top-left,
-bilingual label below (Chinese / English), clean sans-serif font.
-
-================================================================
-BRANDING:
-================================================================
-Top-left: "${brand}" — large bold editorial serif, 2 lines
-Below brand: "Living room option" — small italic serif, warm gray
-Top-right: "Living room option" — wide-tracked light sans-serif
-${extra ? `\nSPECIAL REQUIREMENTS: ${extra}` : ''}
-
-================================================================
-CRITICAL RULES:
-================================================================
-1. Product colors/materials/shapes are LOCKED — do not change them
-2. Only the environment adapts to the style direction
-3. ALL furniture placement must follow real interior design logic
-4. NO floating objects, NO rugs on walls, NO lamps on ceilings
-5. The scene must look like a real professionally designed room
-6. Portrait 3:4 ratio. High-end editorial quality — think AD Magazine
-================================================================`;
-
+    // 更新界面文本
     document.getElementById('outputText').textContent = prompt;
     document.getElementById('outputPanel').classList.add('visible');
     document.getElementById('tipBox').classList.add('visible');
+
+    // --- 开始 Coze 预览逻辑 ---
+    const previewImg = document.getElementById('finalMoodboardImage');
+    const placeholder = document.getElementById('previewPlaceholder');
+    const spinner = document.getElementById('loadingSpinner');
+
+    if (placeholder) placeholder.style.display = 'none';
+    if (previewImg) previewImg.style.display = 'none';
+    if (spinner) spinner.style.display = 'flex';
+
+    try {
+        const response = await fetch('https://api.coze.cn/v3/chat', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer pat_IHzWS3yAc1oyByKBp4Ad14WBt5kmOg8zEJqqDyTXjjDmci2C4ACX8noX8Lbup1Ue', 
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "bot_id": "7618614134871474217",
+                "user_id": "Az_User",
+                "stream": false,
+                "additional_messages": [{
+                    "role": "user",
+                    "content": prompt,
+                    "content_type": "text"
+                }]
+            })
+        });
+
+        const data = await response.json();
+        
+        // 抓取图片链接
+        if (data.data && data.data.length > 0) {
+            const content = data.data[0].content;
+            const urlMatch = content.match(/https?:\/\/[^\s)]+(?:\.jpg|\.png|\.webp|\.jpeg)/i);
+            
+            if (urlMatch && previewImg) {
+                previewImg.src = urlMatch[0];
+                previewImg.onload = () => {
+                    if (spinner) spinner.style.display = 'none';
+                    previewImg.style.display = 'block';
+                };
+            }
+        }
+    } catch (err) {
+        console.error("预览失败:", err);
+        if (spinner) spinner.style.display = 'none';
+        if (placeholder) {
+            placeholder.style.display = 'block';
+            placeholder.textContent = "预览生成超时，请复制下方提示词手动生成";
+        }
+    }
     setTimeout(() => document.getElementById('outputPanel').scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
   }
 
