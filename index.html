@@ -375,18 +375,24 @@
     padding: 2px 4px;
   }
 
-  .product-type-select {
+  .product-type-input {
     width: 100%;
     background: transparent;
     border: none;
+    border-top: 0.5px solid var(--border);
     font-size: 10px;
     color: var(--text-muted);
     font-family: 'DM Sans', sans-serif;
-    cursor: pointer;
+    cursor: text;
     text-align: center;
     outline: none;
-    padding: 1px 0;
-    appearance: none;
+    padding: 3px 2px;
+  }
+
+  .product-type-input:focus {
+    background: var(--sand);
+    border-radius: 0 0 3px 3px;
+    color: var(--espresso);
   }
 
   /* ── BLOCK ── */
@@ -1316,6 +1322,7 @@
     products.forEach(p => {
       const card = document.createElement('div');
       card.className = 'product-card' + (p.selected ? ' selected' : '');
+      const safeId = 'p' + String(p.id).replace(/[^a-z0-9]/gi,'');
       card.innerHTML = `
         <button class="del-btn" onclick="deleteProduct('${p.id}', event)">×</button>
         <div class="product-check">
@@ -1325,10 +1332,16 @@
         <div class="product-info">
           <input class="product-name-input" type="text" value="${p.name}"
             onclick="event.stopPropagation()"
-            onchange="updateProductName('${p.id}', this.value)" title="点击编辑名称">
-          <select class="product-type-select" onclick="event.stopPropagation()" onchange="updateProductType('${p.id}', this.value)">
-            ${PRODUCT_TYPES.map(t => `<option value="${t}" ${t === p.type ? 'selected' : ''}>${t.split('/')[0]}</option>`).join('')}
-          </select>
+            onchange="updateProductName('${p.id}', this.value)"
+            placeholder="产品名称" title="点击编辑产品名称">
+          <input class="product-type-input" type="text" value="${p.type.split('/')[0]}"
+            list="type-suggestions-${safeId}"
+            onclick="event.stopPropagation()"
+            onchange="updateProductType('${p.id}', this.value)"
+            placeholder="产品类型" title="输入或选择类型">
+          <datalist id="type-suggestions-${safeId}">
+            ${PRODUCT_TYPES.map(t => `<option value="${t.split('/')[0]}">`).join('')}
+          </datalist>
         </div>`;
       card.addEventListener('click', () => { p.selected = !p.selected; renderGrid(); updatePreview(); });
       grid.appendChild(card);
