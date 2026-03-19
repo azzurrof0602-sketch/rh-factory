@@ -1339,20 +1339,20 @@ OUTPUT: One cinematic portrait-format image (3:4 ratio), high resolution, photor
     setLoadingState(true);
 
     // Build parts: text prompt + all selected product images
-    const imageParts = selected.map(p => ({
-      inline_data: {
-        mime_type: p.mimeType || p.src.split(';')[0].split(':')[1],
-        data: p.src.split(',')[1]
-      }
-    }));
+    const contentParts = [
+      { text: promptText },
+      ...selected.map(p => ({
+        inlineData: {
+          mimeType: p.mimeType || p.src.split(';')[0].split(':')[1],
+          data: p.src.split(',')[1]
+        }
+      }))
+    ];
 
     const requestBody = {
       contents: [{
         role: 'user',
-        parts: [
-          { text: promptText },
-          ...imageParts
-        ]
+        parts: contentParts
       }],
       generationConfig: {
         responseModalities: ['TEXT', 'IMAGE']
@@ -1364,38 +1364,49 @@ OUTPUT: One cinematic portrait-format image (3:4 ratio), high resolution, photor
         `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`,
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'x-goog-api-key': apiKey
+          },
           body: JSON.stringify(requestBody)
         }
       );
 
       if (!response.ok) {
         const errData = await response.json().catch(() => ({}));
-        throw new Error(errData.error?.message || `HTTP ${response.status}`);
+        const msg = errData.error?.message || `HTTP ${response.status}`;
+        throw new Error(msg);
       }
 
       const data = await response.json();
+      console.log('Gemini raw response:', JSON.stringify(data).slice(0, 500));
 
       if (!data.candidates || data.candidates.length === 0) {
-        throw new Error('API 返回无候选结果，请检查内容安全策略。');
+        const blocked = data.promptFeedback?.blockReason;
+        throw new Error(blocked ? `内容被安全策略拦截：${blocked}` : 'API 返回无候选结果');
       }
 
       const parts = data.candidates[0]?.content?.parts || [];
-      const imagePart = parts.find(p => p.inline_data);
+      // 支持两种字段名：inline_data（旧）和 inlineData（新SDK）
+      const imagePart = parts.find(p => p.inlineData || p.inline_data);
 
       if (imagePart) {
-        const mime = imagePart.inline_data.mime_type;
-        const b64 = imagePart.inline_data.data;
+        const imgData = imagePart.inlineData || imagePart.inline_data;
+        const mime = imgData.mimeType || imgData.mime_type;
+        const b64 = imgData.data;
         lastGeneratedDataUrl = `data:${mime};base64,${b64}`;
 
         const imgEl = document.getElementById('finalMoodboardImage');
         imgEl.src = lastGeneratedDataUrl;
         imgEl.onload = () => setLoadingState(false, 'success');
-        imgEl.onerror = () => { throw new Error('图片解码失败'); };
+        imgEl.onerror = () => setLoadingState(false, 'error', '图片解码失败');
       } else {
-        // API returned text only — show it
         const textPart = parts.find(p => p.text);
-        throw new Error(textPart?.text || 'API 未返回图像数据，请检查模型访问权限。');
+        const reason = data.candidates[0]?.finishReason || '';
+        const msg = textPart?.text
+          ? `模型回复：${textPart.text.slice(0, 100)}`
+          : `未返回图像（finishReason: ${reason}）`;
+        throw new Error(msg);
       }
 
     } catch (err) {
