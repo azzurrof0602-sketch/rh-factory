@@ -182,6 +182,12 @@
     gap: 8px;
   }
 
+  .hero-card-icon {
+    width: 32px;
+    height: 32px;
+    opacity: 0.6;
+  }
+
   /* ── MAIN LAYOUT ── */
   .main {
     max-width: 1100px;
@@ -221,6 +227,12 @@
     color: var(--black);
   }
 
+  .section-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
   /* ── PRODUCT UPLOAD ── */
   .upload-zone {
     border: 1px dashed var(--taupe);
@@ -257,6 +269,12 @@
     font-size: 12px;
     color: var(--text-muted);
     line-height: 1.7;
+  }
+
+  .upload-zone .browse-link {
+    color: var(--gold);
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   /* ── PRODUCT GRID ── */
@@ -361,20 +379,14 @@
     width: 100%;
     background: transparent;
     border: none;
-    border-top: 0.5px solid var(--border);
     font-size: 10px;
     color: var(--text-muted);
     font-family: 'DM Sans', sans-serif;
     cursor: pointer;
     text-align: center;
     outline: none;
-    padding: 3px 2px;
+    padding: 1px 0;
     appearance: none;
-  }
-
-  .product-type-select:focus {
-    background: var(--sand);
-    border-radius: 3px;
   }
 
   /* ── BLOCK ── */
@@ -392,6 +404,19 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 8px;
   }
+
+  .style-category-label {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--taupe);
+    margin: 14px 0 8px;
+    padding-bottom: 6px;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .style-category-label:first-child { margin-top: 0; }
 
   .style-pill {
     padding: 10px 8px;
@@ -414,8 +439,6 @@
     color: var(--gold-light);
   }
 
-  .style-pill.active .style-pill-sub { color: rgba(232,213,163,0.6); }
-
   .style-pill-name {
     font-size: 12px;
     font-weight: 500;
@@ -428,6 +451,8 @@
     color: var(--text-muted);
     display: block;
   }
+
+  .style-pill.active .style-pill-sub { color: var(--gold-light); opacity: 0.7; }
 
   /* ── FORM CONTROLS ── */
   .form-grid {
@@ -466,101 +491,7 @@
     appearance: none;
   }
 
-  .form-control:focus { border-color: var(--taupe); }
-
-  /* ── PROMPT EDITOR ── */
-  .prompt-editor {
-    width: 100%;
-    min-height: 120px;
-    background: white;
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 10px 12px;
-    font-size: 12px;
-    font-family: 'DM Sans', sans-serif;
-    color: var(--espresso);
-    outline: none;
-    resize: vertical;
-    line-height: 1.7;
-    transition: border-color 0.2s;
-  }
-
-  .prompt-editor:focus { border-color: var(--taupe); }
-
-  .prompt-actions {
-    display: flex;
-    gap: 8px;
-    margin-top: 8px;
-  }
-
-  .prompt-btn {
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 11px;
-    cursor: pointer;
-    border: 0.5px solid var(--border);
-    background: white;
-    color: var(--brown);
-    transition: all 0.2s;
-  }
-
-  .prompt-btn:hover { border-color: var(--taupe); background: var(--cream); }
-
-  .prompt-btn.primary {
-    background: var(--espresso);
-    color: var(--gold-light);
-    border-color: var(--espresso);
-  }
-
-  .prompt-btn.primary:hover { background: var(--black); }
-
-  /* ── OUTPUT PANEL (inline) ── */
-  .output-inline {
-    display: none;
-    background: white;
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    margin-top: 8px;
-  }
-
-  .output-inline.visible { display: block; }
-
-  .output-inline-header {
-    padding: 8px 14px;
-    background: var(--cream);
-    border-bottom: 0.5px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 10px;
-    color: var(--text-muted);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-
-  .copy-btn-sm {
-    padding: 4px 12px;
-    background: var(--espresso);
-    color: var(--gold-light);
-    border: none;
-    border-radius: 20px;
-    font-size: 10px;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-
-  .copy-btn-sm:hover { background: var(--black); }
-
-  .output-inline-text {
-    padding: 12px 14px;
-    font-size: 11px;
-    color: var(--espresso);
-    white-space: pre-wrap;
-    max-height: 200px;
-    overflow-y: auto;
-    line-height: 1.7;
-  }
+  .form-control:focus { border-color: var(--brown); }
 
   /* ── SIDEBAR ── */
   .sidebar { position: sticky; top: 80px; }
@@ -582,59 +513,6 @@
     opacity: 0.8;
   }
 
-  .preview-image-wrap {
-    width: 100%;
-    aspect-ratio: 3/4;
-    background: rgba(0,0,0,0.2);
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    position: relative;
-    border: 0.5px solid rgba(232,213,163,0.1);
-  }
-
-  .preview-placeholder {
-    font-size: 11px;
-    color: rgba(232,213,163,0.3);
-    text-align: center;
-    padding: 20px;
-    line-height: 1.8;
-  }
-
-  #finalMoodboardImage {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: none;
-  }
-
-  .loading-overlay {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .loading-ring {
-    width: 28px;
-    height: 28px;
-    border: 2px solid rgba(196,163,90,0.2);
-    border-top-color: var(--gold);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .loading-text {
-    font-size: 10px;
-    color: var(--gold);
-    letter-spacing: 0.1em;
-  }
-
   .preview-brand {
     font-family: 'Cormorant Garamond', serif;
     font-size: 26px;
@@ -649,17 +527,6 @@
     color: var(--gold);
     opacity: 0.7;
     margin-bottom: 1.5rem;
-  }
-
-  .preview-style-badge {
-    display: inline-block;
-    padding: 4px 10px;
-    border: 0.5px solid rgba(196,163,90,0.4);
-    border-radius: 20px;
-    font-size: 10px;
-    color: var(--gold);
-    letter-spacing: 0.1em;
-    margin-bottom: 1rem;
   }
 
   .preview-items {
@@ -687,6 +554,25 @@
     opacity: 0.6;
   }
 
+  .preview-style-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border: 0.5px solid rgba(196,163,90,0.4);
+    border-radius: 20px;
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+  }
+
+  .preview-empty {
+    font-size: 12px;
+    color: rgba(232,213,163,0.3);
+    font-style: italic;
+    text-align: center;
+    padding: 1rem 0;
+  }
+
   /* ── GENERATE BTN ── */
   .generate-btn {
     width: 100%;
@@ -704,28 +590,120 @@
     margin-bottom: 10px;
   }
 
-  .generate-btn:hover:not(:disabled) { background: #B8922F; transform: translateY(-1px); }
-  .generate-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+  .generate-btn:hover {
+    background: #B8922F;
+    transform: translateY(-1px);
+  }
 
-  /* ── DOWNLOAD BTN ── */
-  .download-btn {
-    width: 100%;
-    padding: 10px;
-    background: transparent;
-    color: var(--gold-light);
-    border: 0.5px solid rgba(232,213,163,0.3);
-    border-radius: var(--radius);
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-top: 8px;
+  .generate-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* ── OUTPUT ── */
+  .output-panel {
+    background: white;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-top: 1.5rem;
     display: none;
   }
 
-  .download-btn.visible { display: block; }
-  .download-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .output-panel.visible { display: block; }
 
-  /* ── COUNTER ROW ── */
+  .output-header {
+    padding: 12px 16px;
+    background: var(--cream);
+    border-bottom: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .output-header-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--brown);
+  }
+
+  .copy-btn {
+    padding: 5px 14px;
+    background: var(--espresso);
+    color: var(--gold-light);
+    border: none;
+    border-radius: 20px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+  }
+
+  .copy-btn:hover { background: var(--black); }
+  .copy-btn.copied { background: #2d6a4f; }
+
+  .output-text {
+    padding: 16px;
+    font-size: 12px;
+    line-height: 1.75;
+    color: var(--espresso);
+    white-space: pre-wrap;
+    font-family: 'DM Sans', sans-serif;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  /* ── TIP BOX ── */
+  .tip-box {
+    background: rgba(196,163,90,0.08);
+    border: 0.5px solid rgba(196,163,90,0.3);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    font-size: 11px;
+    color: var(--brown);
+    line-height: 1.7;
+    margin-top: 10px;
+    display: none;
+  }
+
+  .tip-box.visible { display: block; }
+
+  .tip-box strong { color: var(--espresso); }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 0.5px solid var(--border);
+    padding: 2rem 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    color: var(--taupe);
+  }
+
+  .footer-note {
+    font-size: 11px;
+    color: var(--taupe);
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 0.5px;
+    background: var(--border);
+    margin: 2rem 0;
+  }
+
+  /* ── COUNTER ── */
   .counter-row {
     display: flex;
     align-items: center;
@@ -733,13 +711,22 @@
     margin-bottom: 1rem;
   }
 
+  .counter-text {
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .counter-text span { color: var(--espresso); font-weight: 500; }
+
   .select-all-btn {
     font-size: 11px;
     color: var(--brown);
     background: none;
     border: none;
     cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
     text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   /* ── SCENE INDICATOR ── */
@@ -765,50 +752,56 @@
     animation: pulse 2s infinite;
   }
 
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-
-  /* ── API KEY INPUT ── */
-  .api-key-block {
-    background: rgba(196,163,90,0.05);
-    border: 0.5px solid rgba(196,163,90,0.2);
-    border-radius: var(--radius);
-    padding: 12px 14px;
-    margin-bottom: 1rem;
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
   }
 
-  .api-key-label {
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
+  .auto-tag {
+    font-size: 9px;
+    background: rgba(196,163,90,0.15);
     color: var(--gold);
-    display: block;
-    margin-bottom: 6px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    letter-spacing: 0.05em;
+    font-weight: 400;
+    margin-left: 4px;
   }
 
-  .api-key-input {
-    width: 100%;
-    background: white;
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 8px 12px;
-    font-size: 12px;
-    font-family: 'DM Sans', monospace;
-    color: var(--espresso);
-    outline: none;
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--taupe); border-radius: 2px; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; gap: 2rem; }
+    .hero-visual { display: none; }
+    .main { grid-template-columns: 1fr; }
+    .sidebar { position: static; }
+    nav { padding: 0 1.25rem; }
+    .nav-steps { display: none; }
+    .hero, .main { padding-left: 1.25rem; padding-right: 1.25rem; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-group.full { grid-column: span 1; }
+    .style-grid { grid-template-columns: repeat(2, 1fr); }
   }
 
-  footer {
-    border-top: 0.5px solid var(--border);
-    padding: 2rem 2.5rem;
-    text-align: center;
-    font-size: 12px;
-    color: var(--taupe);
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
   }
+
+  .block { animation: fadeUp 0.4s ease both; }
+  .block:nth-child(2) { animation-delay: 0.05s; }
+  .block:nth-child(3) { animation-delay: 0.1s; }
+  .block:nth-child(4) { animation-delay: 0.15s; }
 </style>
 </head>
 <body>
 
+<!-- NAV -->
 <nav>
   <div style="display:flex;align-items:baseline;gap:0">
     <a href="#" class="nav-brand">RH FACTORY</a>
@@ -818,100 +811,190 @@
     <li><a href="#upload">产品</a></li>
     <li><a href="#style">风格</a></li>
     <li><a href="#scene">场景</a></li>
-    <li><a href="#prompt">提示词</a></li>
+    <li><a href="#output">生成</a></li>
   </ul>
 </nav>
 
+<!-- HERO -->
 <section class="hero">
   <div>
-    <p class="hero-eyebrow">Gemini 2.0 Flash Image Generation</p>
-    <h1 class="hero-title">RH Studio<br><em>AI Power</em><br>Engine</h1>
-    <p class="hero-desc">直连 Google Gemini 最强视觉引擎，体验毫秒级软装方案生成。</p>
+    <p class="hero-eyebrow">Soft Furnishing Mood Board Generator</p>
+    <h1 class="hero-title">Make<br><em>Beautiful</em><br>Boards</h1>
+    <p class="hero-desc">上传家具产品图 → 选择风格 → 一键生成 Gemini 提示词。每天轻松做出高质感软装方案版。</p>
     <div class="hero-stats">
-      <div class="stat-item"><span class="stat-num">6</span><span class="stat-label">风格方向</span></div>
-      <div class="stat-item"><span class="stat-num">∞</span><span class="stat-label">产品数量</span></div>
-      <div class="stat-item"><span class="stat-num">3:4</span><span class="stat-label">输出比例</span></div>
+      <div class="stat-item">
+        <span class="stat-num">6+</span>
+        <span class="stat-label">风格方向</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">∞</span>
+        <span class="stat-label">产品组合</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">5s</span>
+        <span class="stat-label">生成速度</span>
+      </div>
     </div>
   </div>
   <div class="hero-visual">
-    <div class="hero-card">Gemini Flash</div>
-    <div class="hero-card">奶油侘寂</div>
-    <div class="hero-card">法式古典</div>
+    <div class="hero-card">
+      <svg class="hero-card-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="18" width="24" height="6" rx="1" stroke="currentColor" stroke-width="1"/>
+        <rect x="8" y="10" width="16" height="8" rx="1" stroke="currentColor" stroke-width="1"/>
+        <line x1="10" y1="24" x2="10" y2="28" stroke="currentColor" stroke-width="1"/>
+        <line x1="22" y1="24" x2="22" y2="28" stroke="currentColor" stroke-width="1"/>
+      </svg>
+      Living Room<br>Moodboard
+    </div>
+    <div class="hero-card">法式清新</div>
+    <div class="hero-card">极简现代</div>
   </div>
 </section>
 
+<!-- MAIN -->
 <main class="main">
   <div class="left-col">
 
-    <!-- STEP 1: 上传 -->
+    <!-- STEP 1: UPLOAD -->
     <div class="block" id="upload">
       <div class="section-header">
         <div class="section-num">1</div>
-        <div class="section-title">上传产品图片</div>
+        <div>
+          <div class="section-title">上传产品图片</div>
+          <div class="section-sub">支持 JPG / PNG，可批量上传，点击图片可重命名</div>
+        </div>
       </div>
 
-      <div class="upload-zone" id="uploadZone">
+      <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
         <svg class="upload-icon" viewBox="0 0 40 40" fill="none">
           <rect x="6" y="12" width="28" height="22" rx="3" stroke="currentColor" stroke-width="1.2"/>
-          <path d="M14 18l6-6 6 6" stroke="currentColor" stroke-width="1.2"/>
-          <line x1="20" y1="12" x2="20" y2="26" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M14 18l6-6 6 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="20" y1="12" x2="20" y2="26" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
         </svg>
-        <h3>点击或拖拽上传家具产品图</h3>
-        <p>支持 JPG / PNG / WEBP，可多张同时上传<br>Gemini 会读取产品的几何细节与材质</p>
+        <h3>拖拽或点击上传家具产品图</h3>
+        <p>上传后可以点击图片下方的名称进行编辑<br>点击卡片选中/取消该产品参与生成</p>
       </div>
-      <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" multiple style="display:none">
+
+      <input type="file" id="fileInput" accept="image/*" multiple style="display:none" onchange="handleUpload(event)">
 
       <div class="counter-row" id="counterRow" style="display:none">
-        <span style="font-size:11px;color:var(--text-muted);">已选 <strong id="selCount" style="color:var(--espresso);">0</strong> 件产品参与生成</span>
-        <button class="select-all-btn" id="selectAllBtn" onclick="toggleSelectAll()">全选 / 取消全选</button>
+        <span class="counter-text">已上传 <span id="totalCount">0</span> 件 · 已选 <span id="selCount">0</span> 件参与生成</span>
+        <button class="select-all-btn" onclick="toggleSelectAll()">全选 / 取消</button>
       </div>
 
       <div class="product-grid" id="productGrid"></div>
     </div>
 
-    <!-- STEP 2: 风格 -->
+    <!-- STEP 2: STYLE -->
     <div class="block" id="style">
       <div class="section-header">
         <div class="section-num">2</div>
-        <div class="section-title">风格方向</div>
+        <div>
+          <div class="section-title">选择风格方向</div>
+          <div class="section-sub">决定场景的整体氛围与环境调性</div>
+        </div>
       </div>
-      <div class="style-grid">
-        <div class="style-pill active" data-style="法式清新" onclick="selectStyle(this)">
-          <span class="style-pill-name">法式清新</span>
-          <span class="style-pill-sub">Parisian Fresh</span>
+      <div id="styleGrid">
+
+        <div class="style-category-label">欧式 · European</div>
+        <div class="style-grid">
+          <div class="style-pill active" data-style="法式清新" onclick="selectStyle(this)">
+            <span class="style-pill-name">法式清新</span>
+            <span class="style-pill-sub">French Contemporary</span>
+          </div>
+          <div class="style-pill" data-style="法式古典" onclick="selectStyle(this)">
+            <span class="style-pill-name">法式古典</span>
+            <span class="style-pill-sub">Classic Haussmann</span>
+          </div>
+          <div class="style-pill" data-style="意式优雅" onclick="selectStyle(this)">
+            <span class="style-pill-name">意式优雅</span>
+            <span class="style-pill-sub">Italian Elegance</span>
+          </div>
+          <div class="style-pill" data-style="Art Deco" onclick="selectStyle(this)">
+            <span class="style-pill-name">Art Deco</span>
+            <span class="style-pill-sub">Geometric Opulence</span>
+          </div>
+          <div class="style-pill" data-style="地中海" onclick="selectStyle(this)">
+            <span class="style-pill-name">地中海</span>
+            <span class="style-pill-sub">Mediterranean Coast</span>
+          </div>
+          <div class="style-pill" data-style="英式绅士" onclick="selectStyle(this)">
+            <span class="style-pill-name">英式绅士</span>
+            <span class="style-pill-sub">British Heritage</span>
+          </div>
         </div>
-        <div class="style-pill" data-style="奶油侘寂" onclick="selectStyle(this)">
-          <span class="style-pill-name">奶油侘寂</span>
-          <span class="style-pill-sub">Japandi Wabi</span>
+
+        <div class="style-category-label">现代 · Modern</div>
+        <div class="style-grid">
+          <div class="style-pill" data-style="现代极简" onclick="selectStyle(this)">
+            <span class="style-pill-name">现代极简</span>
+            <span class="style-pill-sub">Contemporary Minimal</span>
+          </div>
+          <div class="style-pill" data-style="轻奢都市" onclick="selectStyle(this)">
+            <span class="style-pill-name">轻奢都市</span>
+            <span class="style-pill-sub">Urban Luxury</span>
+          </div>
+          <div class="style-pill" data-style="工业酷感" onclick="selectStyle(this)">
+            <span class="style-pill-name">工业酷感</span>
+            <span class="style-pill-sub">Industrial Loft</span>
+          </div>
+          <div class="style-pill" data-style="未来科技" onclick="selectStyle(this)">
+            <span class="style-pill-name">未来科技</span>
+            <span class="style-pill-sub">Futuristic Tech</span>
+          </div>
+          <div class="style-pill" data-style="高级暗黑" onclick="selectStyle(this)">
+            <span class="style-pill-name">高级暗黑</span>
+            <span class="style-pill-sub">Dark Moody Luxury</span>
+          </div>
+          <div class="style-pill" data-style="后现代艺术" onclick="selectStyle(this)">
+            <span class="style-pill-name">后现代艺术</span>
+            <span class="style-pill-sub">Postmodern Art</span>
+          </div>
         </div>
-        <div class="style-pill" data-style="法式古典" onclick="selectStyle(this)">
-          <span class="style-pill-name">法式古典</span>
-          <span class="style-pill-sub">Classic French</span>
+
+        <div class="style-category-label">自然 · Natural</div>
+        <div class="style-grid">
+          <div class="style-pill" data-style="奶油侘寂" onclick="selectStyle(this)">
+            <span class="style-pill-name">奶油侘寂</span>
+            <span class="style-pill-sub">Japandi Wabi-sabi</span>
+          </div>
+          <div class="style-pill" data-style="北欧自然" onclick="selectStyle(this)">
+            <span class="style-pill-name">北欧自然</span>
+            <span class="style-pill-sub">Scandinavian Natural</span>
+          </div>
+          <div class="style-pill" data-style="日系禅意" onclick="selectStyle(this)">
+            <span class="style-pill-name">日系禅意</span>
+            <span class="style-pill-sub">Japanese Zen</span>
+          </div>
+          <div class="style-pill" data-style="热带度假" onclick="selectStyle(this)">
+            <span class="style-pill-name">热带度假</span>
+            <span class="style-pill-sub">Tropical Resort</span>
+          </div>
+          <div class="style-pill" data-style="美式庄园" onclick="selectStyle(this)">
+            <span class="style-pill-name">美式庄园</span>
+            <span class="style-pill-sub">American Country</span>
+          </div>
+          <div class="style-pill" data-style="波西米亚" onclick="selectStyle(this)">
+            <span class="style-pill-name">波西米亚</span>
+            <span class="style-pill-sub">Boho Eclectic</span>
+          </div>
         </div>
-        <div class="style-pill" data-style="现代极简" onclick="selectStyle(this)">
-          <span class="style-pill-name">现代极简</span>
-          <span class="style-pill-sub">Modern Minimal</span>
-        </div>
-        <div class="style-pill" data-style="意式优雅" onclick="selectStyle(this)">
-          <span class="style-pill-name">意式优雅</span>
-          <span class="style-pill-sub">Italian Elegance</span>
-        </div>
-        <div class="style-pill" data-style="英式绅士" onclick="selectStyle(this)">
-          <span class="style-pill-name">英式绅士</span>
-          <span class="style-pill-sub">British Heritage</span>
-        </div>
+
       </div>
     </div>
 
-    <!-- STEP 3: 场景 -->
+    <!-- STEP 3: SCENE -->
     <div class="block" id="scene">
       <div class="section-header">
         <div class="section-num">3</div>
-        <div class="section-title">场景设定</div>
+        <div>
+          <div class="section-title">场景与品牌设定</div>
+          <div class="section-sub">选择风格后场景选项自动匹配 · 可手动微调</div>
+        </div>
       </div>
-      <div class="scene-indicator">
+      <div class="scene-indicator" id="sceneIndicator">
         <span class="scene-dot"></span>
-        <span id="sceneIndicatorText">风格已自动匹配场景配置</span>
+        <span id="sceneIndicatorText">当前风格：法式清新 — 场景已自动配置</span>
       </div>
       <div class="form-grid">
         <div class="form-group">
@@ -921,61 +1004,46 @@
         <div class="form-group">
           <label class="form-label">空间类型</label>
           <select class="form-control" id="roomType">
-            <option value="living room">客厅 Living Room</option>
-            <option value="bedroom">卧室 Bedroom</option>
-            <option value="study">书房 Study</option>
-            <option value="dining room">餐厅 Dining Room</option>
-            <option value="entrance hall">玄关 Entrance Hall</option>
+            <option>客厅 Living Room</option>
+            <option>卧室 Bedroom</option>
+            <option>餐厅 Dining Room</option>
+            <option>书房 Study</option>
+            <option>玄关 Entryway</option>
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label">墙面背景</label>
+          <label class="form-label">墙面背景 <span class="auto-tag">自动</span></label>
           <select class="form-control" id="wallColor"></select>
         </div>
         <div class="form-group">
-          <label class="form-label">地面材质</label>
+          <label class="form-label">地面材质 <span class="auto-tag">自动</span></label>
           <select class="form-control" id="floorType"></select>
         </div>
         <div class="form-group">
-          <label class="form-label">光线氛围</label>
+          <label class="form-label">光线氛围 <span class="auto-tag">自动</span></label>
           <select class="form-control" id="lightMood"></select>
         </div>
         <div class="form-group">
-          <label class="form-label">绿植装饰</label>
+          <label class="form-label">绿植装饰 <span class="auto-tag">自动</span></label>
           <select class="form-control" id="plantType"></select>
         </div>
         <div class="form-group">
-          <label class="form-label">地毯风格</label>
+          <label class="form-label">地毯风格 <span class="auto-tag">自动</span></label>
           <select class="form-control" id="rugType"></select>
         </div>
         <div class="form-group">
           <label class="form-label">人物模特</label>
           <select class="form-control" id="modelType">
-            <option value="no people">无人物</option>
-            <option value="elegant female model in a flowing dress, back to camera">优雅女模（背影）</option>
-            <option value="elegant female model reading a book, side profile">优雅女模（侧面）</option>
-            <option value="male model in casual linen outfit, relaxed pose">休闲男模</option>
+            <option value="none">无人物</option>
+            <option value="white jumpsuit blonde female model, walking naturally, looking down">白色连体裤金发女模</option>
+            <option value="cream knit sweater camel wide-leg pants burgundy loafers female model">奶白毛衣驼色裤女模</option>
+            <option value="elegant minimal silk dress Asian female model, graceful posture">优雅都市亚洲女模</option>
+            <option value="smart casual linen outfit male model, relaxed pose">休闲亚麻男模</option>
           </select>
         </div>
         <div class="form-group full">
-          <label class="form-label">特别要求</label>
-          <input class="form-control" type="text" id="extraNotes" placeholder="如：增加大理石背景墙、添加烛台氛围...">
-        </div>
-      </div>
-    </div>
-
-    <!-- STEP 4: 提示词 -->
-    <div class="block" id="prompt">
-      <div class="section-header">
-        <div class="section-num">4</div>
-        <div class="section-title">提示词预览与编辑</div>
-      </div>
-      <textarea class="prompt-editor" id="promptEditor" placeholder="点击「预览提示词」生成并在此编辑..."></textarea>
-      <div class="prompt-actions">
-        <button class="prompt-btn" onclick="buildPrompt()">预览提示词</button>
-        <button class="prompt-btn primary" onclick="copyPromptText()">复制提示词</button>
-        <div class="output-inline" id="copyConfirm">
-          <div style="padding:6px 12px; font-size:11px; color:var(--brown);">✓ 已复制到剪贴板</div>
+          <label class="form-label">特别要求（可选）</label>
+          <input class="form-control" type="text" id="extraNotes" placeholder="例如：加入壁炉、强调沙发颜色不变、增加蜡烛摆件…">
         </div>
       </div>
     </div>
@@ -984,279 +1052,341 @@
 
   <!-- SIDEBAR -->
   <div class="sidebar">
-
-    <!-- API KEY -->
-    <div class="api-key-block">
-      <span class="api-key-label">Google API Key</span>
-      <input type="password" class="api-key-input" id="apiKeyInput" placeholder="粘贴你的 Gemini API Key...">
-    </div>
-
     <div class="preview-card">
-      <div class="preview-card-label">Gemini 2.0 Flash · Image Preview</div>
-
-      <div class="preview-image-wrap" id="previewWrap">
-        <div class="preview-placeholder" id="previewPlaceholder">
-          上传产品图片<br>并点击生成按钮<br>方案图将在此显示
-        </div>
-        <img id="finalMoodboardImage" alt="Generated Moodboard">
-        <div class="loading-overlay" id="loadingOverlay">
-          <div class="loading-ring"></div>
-          <span class="loading-text">Gemini 正在渲染中...</span>
-        </div>
-      </div>
-
+      <div class="preview-card-label">Preview</div>
       <div class="preview-brand" id="previewBrand">RH FACTORY</div>
-      <div class="preview-style-badge" id="previewStyle">法式清新</div>
+      <div class="preview-sub">Living room option</div>
+      <div class="preview-style-badge" id="previewStyle">法式清新 · French Contemporary</div>
       <div class="preview-items" id="previewItems">
-        <div class="preview-item" style="opacity:0.3;font-size:10px;">暂无已选产品</div>
+        <div class="preview-empty">上传产品图片后显示</div>
       </div>
     </div>
 
-    <button class="generate-btn" id="generateBtn" onclick="generateMoodboard()">生成方案图 →</button>
-    <button class="download-btn" id="downloadBtn" onclick="downloadImage()">↓ 下载方案图</button>
+    <button class="generate-btn" id="genBtn" onclick="generatePrompt()">
+      生成提示词 →
+    </button>
 
+    <div class="output-panel" id="outputPanel">
+      <div class="output-header">
+        <span class="output-header-label">Gemini 提示词</span>
+        <button class="copy-btn" id="copyBtn" onclick="copyPrompt()">复制全部</button>
+      </div>
+      <div class="output-text" id="outputText"></div>
+    </div>
+
+    <div class="tip-box" id="tipBox">
+      <strong>使用方法：</strong><br>
+      1. 复制上方提示词<br>
+      2. 打开 Gemini，上传所有产品图片<br>
+      3. 粘贴提示词发送<br><br>
+      如果产品外观被 AI 修改，可在提示词开头追加：<br>
+      <strong>"These products are LOCKED. Do not redesign any item."</strong>
+    </div>
   </div>
 </main>
 
-<footer>RH FACTORY · Studio Tool V2.1 · Powered by Google Gemini 2.0 Flash</footer>
+<footer>
+  <span class="footer-brand">RH FACTORY · Studio Tools</span>
+  <span class="footer-note">软装方案版生成器 · Moodboard Generator</span>
+</footer>
 
 <script>
-  // ─── STATE ───────────────────────────────────────────────────────────────────
   let products = [];
   let selectedStyle = '法式清新';
-  let allSelectedFlag = true;
-  let lastGeneratedDataUrl = null;
+  let allSelected = true;
 
-  // ─── CONSTANTS ───────────────────────────────────────────────────────────────
-  const GEMINI_MODEL = 'gemini-3.1-flash-image-preview';
+  const PRODUCT_TYPES = ['沙发/Sofa','茶几/Coffee Table','挂画/Wall Art','地毯/Carpet','边几/Side Table','单人椅/Lounge Chair','落地灯/Floor Lamp','吊灯/Chandelier','储物柜/Cabinet','花瓶/Vase','装饰品/Decor','镜子/Mirror'];
 
-  const PRODUCT_TYPES = [
-    '沙发/Sofa', '茶几/Coffee Table', '挂画/Wall Art', '地毯/Carpet',
-    '边几/Side Table', '单人椅/Lounge Chair', '落地灯/Floor Lamp',
-    '吊灯/Chandelier', '储物柜/Cabinet', '花瓶/Vase',
-    '装饰品/Decor', '镜子/Mirror', '书架/Bookshelf', '餐桌/Dining Table',
-    '餐椅/Dining Chair', '床/Bed', '床头柜/Nightstand'
-  ];
-
+  // ── STYLE SCENE CONFIG: each style has its own matched options ──
   const SCENE_CONFIG = {
     '法式清新': {
-      wall: ['纯白法式护墙板 — white plaster Haussmann paneling', '米白石膏灰泥 — warm ivory plaster', '浅灰薄壁纸 — soft grey linen wallpaper'],
-      floor: ['浅金橡木人字拼 — pale oak herringbone parquet', '米白石灰华地砖 — ivory travertine tile', '漂白松木地板 — bleached pine planks'],
-      light: ['清晨巴黎日光 — crisp morning Paris daylight through tall windows', '柔和自然散射光 — soft diffused natural light', '温暖午后侧光 — warm afternoon golden side light'],
-      plant: ['纤细橄榄树 — slender potted olive tree', '白色兰花 — white orchid in ceramic pot', '细枝尤加利 — eucalyptus branches in vase'],
-      rug: ['奶油色羊毛平织毯 — cream wool flat-weave rug', '浅米几何图案毯 — pale geometric cotton rug', '无地毯，留白地板 — bare wood floor']
-    },
-    '奶油侘寂': {
-      wall: ['温白粗糙灰泥 — warm white rough-textured plaster', '米白土坯肌理墙 — warm adobe textured wall', '浅沙色硅藻土 — pale sand diatomite wall'],
-      floor: ['哑光米白陶砖 — matte ivory clay tile', '水洗粗纹混凝土 — washed raw concrete', '天然亚麻色麻石 — natural linen limestone'],
-      light: ['柔和北向散射光 — soft north-facing diffused light', '阴天静谧漫射光 — overcast contemplative light', '清晨侧窗微光 — gentle morning sidelight'],
-      plant: ['单枝枯树枝花器 — sculptural dry branch in ceramic', '侘寂感苔藓盆景 — wabi-sabi moss bonsai', '简单单叶绿植 — single leaf in minimal vase'],
-      rug: ['手工编织麻毯 — handwoven jute rug', '粗糙羊毛流苏毯 — rough wool fringed rug', '无地毯，素裸地面 — bare minimal floor']
+      wall: ['纯白法式护墙板 — white plaster with delicate panel molding','米白石膏 — warm ivory smooth plaster','奶白拱形门廊 — white arched doorway detail'],
+      floor: ['人字拼浅金橡木地板 — pale oak herringbone parquet','浅色石灰石地砖 — light limestone tiles','浅白大理石 — pale white marble'],
+      light: ['明亮巴黎清晨日光 — crisp cool Parisian morning light from tall arched windows','柔和散射午后光 — soft diffused afternoon light','清新春日白光 — fresh spring white daylight'],
+      plant: ['纤细橄榄树（陶土花盆） — slender olive tree in terracotta pot','尤加利枝条白色陶瓶 — eucalyptus branches in white ceramic vase','芒草干花束（象牙白花瓶） — dried pampas grass in ivory vase'],
+      rug: ['奶白人字纹棉织地毯 — ivory herringbone cotton rug','米白细条纹平织毯 — cream fine stripe flatweave rug','纯奶油色羊毛地毯 — pure cream wool area rug'],
     },
     '法式古典': {
-      wall: ['精雕石膏线护墙板 — elaborate gilded plaster moldings', '深绿天鹅绒软包墙 — deep green velvet wall panel', '香槟色丝绒壁纸 — champagne silk wallpaper'],
-      floor: ['深色核桃木人字地板 — dark walnut herringbone parquet', '古典黑白大理石 — classic black and white marble', '深色橡木油漆地板 — dark painted oak floor'],
-      light: ['壁炉暖金灯光 — golden fireplace glow', '水晶吊灯散射光 — crystal chandelier warm glow', '烛光暖金氛围 — candlelight amber atmosphere'],
-      plant: ['古典花卉插花 — classical floral arrangement', '月桂绿植盆栽 — classic bay laurel topiary', '金色花器玫瑰 — roses in gilded vase'],
-      rug: ['波斯风格织毯 — ornate Persian style rug', '奥布松手工织毯 — Aubusson hand-woven rug', '深红波浪纹绒毯 — deep red velvet pile rug']
-    },
-    '现代极简': {
-      wall: ['纯白平滑石膏墙 — pure white smooth plaster', '浅灰单色墙面 — pale grey monochrome wall', '水泥板清水墙 — exposed concrete panel'],
-      floor: ['灰白色微水泥 — white micro-cement polished', '哑光大理石瓷砖 — matte marble porcelain', '浅色亚光橡木 — light matte oak planks'],
-      light: ['冷白均匀漫射光 — cool white even diffused light', '天窗顶部自然光 — skylight natural top light', '线性LED侧光 — linear LED side cove light'],
-      plant: ['单枝极简花卉 — single stem minimal flower', '小型仙人掌盆栽 — small geometric cactus pot', '无植物，纯净空间 — no plants, pure space'],
-      rug: ['纯白厚绒地毯 — pure white plush rug', '浅灰单色薄毯 — pale grey monochrome rug', '无地毯，留白地板 — bare polished floor']
+      wall: ['奶白色精雕石膏线腰线墙 — cream walls with elaborate plaster cornice moldings','象牙白护墙板配镀金线条 — ivory wainscoting with gilded trim','暖米色丝绒壁布 — warm champagne silk wall covering'],
+      floor: ['蜂蜜橡木人字拼地板 — warm honey oak chevron parquet','深色核桃木宽板地板 — dark walnut wide-plank floor','波尔多红大理石地砖 — rich marble tile floor'],
+      light: ['壁炉暖火金色映光 — warm golden fireplace glow','水晶吊灯散射暖光 — soft warm crystal chandelier light','黄昏琥珀色窗光 — amber dusk light through heavy drapes'],
+      plant: ['大型盆栽棕榈（镀金花盆） — large potted palm in gilt planter','古典花卉插花（银质花瓶） — classical floral arrangement in silver vase','无绿植，以装饰品替代 — no plants, use decorative objects instead'],
+      rug: ['波斯风格羊毛手织地毯 — Persian-style hand-woven wool rug','深红金色传统花纹地毯 — deep red and gold traditional pattern rug','羊绒奥布松风格地毯 — Aubusson-style cashmere rug'],
     },
     '意式优雅': {
-      wall: ['石灰华洞石纹理墙 — travertine textured stone wall', '奶白拱形石膏墙 — cream arched plaster wall', '磨砂米兰米色灰泥 — Milanese matte plaster'],
-      floor: ['意式经典水磨石 — classic Italian terrazzo', '卡拉卡塔大理石 — Calacatta marble slab', '哑光陶土砖 — matte Italian terracotta tile'],
-      light: ['琥珀烛光 — warm amber candlelight', '拱窗午后暖光 — afternoon light through arched windows', '铜质壁灯温暖光 — brass sconce warm glow'],
-      plant: ['圆叶琴叶榕 — fiddle leaf fig in terracotta', '白色富贵竹 — white Lucky Bamboo arrangement', '剪枝月桂 — clipped bay branch in stone vase'],
-      rug: ['高级丝绒地毯 — luxury velvet pile rug', '米兰风简约几何毯 — Milanese geometric wool rug', '天然亚麻圆形毯 — natural linen round rug']
+      wall: ['磨砂洞石质感石灰华墙 — matte travertine textured plaster wall','古旧威尼斯灰泥墙 — aged Venetian plaster in warm sand','拱形走廊米白墙 — arched corridor ivory wall'],
+      floor: ['意式水磨石地面 — classic Italian terrazzo floor','米白卡拉拉大理石 — white Carrara marble floor','赤陶砖地面（Cotto） — warm terracotta Cotto tile floor'],
+      light: ['琥珀烛光暖调氛围 — amber candlelight warm atmosphere','黄铜壁灯侧面投射 — brushed brass wall sconce side lighting','温暖地中海午后金光 — warm Mediterranean afternoon golden light'],
+      plant: ['圆叶无花果树（赤陶盆） — fiddle leaf fig in terracotta planter','弯曲枯枝配白色花朵 — sculptural dried branches with white blooms','常青藤垂挂（石膏柱上） — trailing ivy on plaster column'],
+      rug: ['手工编织羊毛地毯（暖棕米色） — hand-woven wool rug in warm tan tones','波浪纹丝绒地毯 — wave-pattern velvet area rug','圆形黄麻编织地毯 — round jute woven rug'],
+    },
+    'Art Deco': {
+      wall: ['几何黑白镶板装饰墙 — bold black and white geometric wall paneling','深祖母绿漆面护墙板 — deep emerald lacquered wall panels','镜面+黑漆几何拼接 — mirrored panels with black lacquer geometric trim'],
+      floor: ['黑白棋盘大理石地砖 — black and white checkerboard marble tile','深色抛光大理石地面 — dark polished marble floor','黑色人字拼橡木地板 — black stained oak herringbone parquet'],
+      light: ['黄金射灯戏剧性聚焦光 — dramatic gold spotlight focused beams','琥珀玻璃壁灯暖调光 — amber glass wall sconce warm glow','镀金吊灯几何造型投影 — gilded geometric chandelier patterned light'],
+      plant: ['无绿植，以雕塑替代 — no plants, use sculptural objects','大型青铜雕塑 — oversized bronze sculpture as focal piece','修剪整齐的黄杨木球 — perfectly trimmed boxwood spheres in brass planter'],
+      rug: ['几何菱形图案羊毛地毯 — bold diamond geometric wool rug','深蓝金色装饰艺术地毯 — deep navy and gold Art Deco pattern rug','黑色圆形绒面地毯 — round black velvet area rug'],
+    },
+    '地中海': {
+      wall: ['白灰泥拱形墙 — whitewashed plaster arched wall','蓝白手绘瓷砖腰线 — blue and white hand-painted tile border','石灰石粗砌墙面 — rough-hewn limestone block wall'],
+      floor: ['赤陶六边形地砖 — terracotta hexagonal tile floor','洗白橡木木地板 — whitewashed oak plank floor','白色鹅卵石小料石地面 — white pebble mosaic floor'],
+      light: ['温暖地中海正午阳光 — warm Mediterranean midday sun','蓝天漫反射柔光 — soft blue-sky diffused daylight','海风白色帘幕散射光 — white sheer curtain breeze-filtered light'],
+      plant: ['柠檬树（白色花盆） — lemon tree in white terracotta pot','龙舌兰与仙人掌组合 — agave and cactus cluster','薰衣草束+白色陶瓶 — lavender bundle in white ceramic vase'],
+      rug: ['蓝白条纹平织棉毯 — blue and white stripe flatweave cotton rug','自然麻编织圆形地毯 — natural jute round woven rug','几何蓝白图案柏柏尔地毯 — blue and white Berber geometric rug'],
     },
     '英式绅士': {
-      wall: ['深森林绿护墙板 — deep forest green wainscoting', '深海军蓝软包墙 — navy blue padded wall', '深褐皮革纹壁纸 — dark cognac leather texture wallpaper'],
-      floor: ['深色人字橡木地板 — dark herringbone oak parquet', '旧风格深褐木地板 — aged dark walnut floor', '石板灰天然石材 — slate grey natural stone'],
-      light: ['黄铜台灯暖光 — polished brass desk lamp glow', '壁挂黄铜烛台 — wall mounted brass candle sconce', '皮革书房灯光 — leather-shaded library lamp'],
-      plant: ['修剪黄杨木球 — clipped boxwood topiary sphere', '常青藤蔓延盆栽 — trailing ivy in bronze pot', '深色花器蕨类 — fern in dark glazed ceramic'],
-      rug: ['苏格兰格纹羊毛毯 — tartan wool rug', '深色波斯风图案毯 — dark Persian pattern rug', '深红粗纹羊毛毯 — deep red chunky wool rug']
-    }
+      wall: ['深森林绿油漆墙 — deep forest green painted wall','深海军蓝护墙板 — navy blue wainscoting','深色橡木护墙板 — dark oak paneled wall'],
+      floor: ['深色胡桃木人字地板 — dark walnut herringbone floor','波斯地毯覆盖原木地板 — Persian rug over hardwood floor','石板地砖 — grey slate tile floor'],
+      light: ['壁炉温暖橙红炉火光 — warm orange fireplace glow','黄铜台灯暖色局部照明 — brass table lamp warm focused light','厚重窗帘后的柔和日光 — soft daylight through heavy curtains'],
+      plant: ['深色花盆英国玫瑰 — English roses in dark ceramic pot','修剪圆球形黄杨木（皮革花盆） — clipped boxwood ball in leather planter','无绿植，以书籍和皮革替代 — no plants, use books and leather objects'],
+      rug: ['波斯手织羊毛地毯（深红蓝绿） — Persian hand-knotted wool rug in deep red and blue','苏格兰格纹羊毛地毯 — tartan plaid wool rug','深色东方花纹地毯 — dark oriental pattern rug'],
+    },
+    '现代极简': {
+      wall: ['纯白光滑无纹墙面 — pure smooth white wall, zero decoration','浅灰白色大板混凝土 — light grey-white large-format concrete panel','哑光白色微水泥 — matte white micro-cement smooth wall'],
+      floor: ['浅白蜡木宽板地板 — pale ash wide-plank floor','浅灰大板瓷砖 — light grey large-format porcelain tile','白色抛光混凝土地面 — white polished concrete floor'],
+      light: ['冷白均匀散射光 — cool white even diffused light, no shadows','冷峻清晨北光 — sharp northern cool morning light','线性LED洗墙光 — linear LED wall-wash light strip'],
+      plant: ['无绿植 — absolutely no plants, keep it pure','单枝极简插花（细玻璃瓶） — single stem in ultra-thin glass vase','白色圆形石膏盆（无植物） — empty white plaster bowl as object'],
+      rug: ['无地毯 — no rug, bare floor only','纯白极简羊毛地毯 — pure white minimal wool rug','浅灰色无纹平织地毯 — light grey plain flatweave rug'],
+    },
+    '轻奢都市': {
+      wall: ['抛光深灰混凝土 — polished dark grey concrete wall','深炭黑哑光灰泥 — matte charcoal plaster wall','黑色钢架落地玻璃窗 — black steel frame floor-to-ceiling glass wall'],
+      floor: ['深灰抛光混凝土地面 — dark grey polished concrete floor','深色烟熏橡木地板 — dark smoked oak wide-plank floor','黑色大板大理石地砖 — large black marble tile floor'],
+      light: ['戏剧性单侧聚光灯 — dramatic single-side spotlight accent','冷白LED灯带线性照明 — cool white LED strip linear lighting','城市夜景室外光映入 — urban night cityscape glow from floor-to-ceiling windows'],
+      plant: ['高细枝干枯木雕塑（无叶） — tall sculptural driftwood, no leaves','单枝黑色花瓶+白色花 — single white flower in matte black vase','无绿植（城市感） — no plants, urban chic'],
+      rug: ['深炭色几何图案地毯 — dark charcoal geometric pattern rug','黑白抽象线条地毯 — black and white abstract line rug','深灰长绒地毯 — dark grey shaggy area rug'],
+    },
+    '工业酷感': {
+      wall: ['裸露红砖墙 — raw exposed red brick wall','素混凝土裂纹墙面 — bare concrete wall with natural cracks','黑色金属网格+砖墙组合 — black metal grid against brick wall'],
+      floor: ['磨损橡木宽板地板 — worn aged oak plank floor','抛光混凝土地面（深色） — polished dark concrete floor','黑色铸铁格栅地板 — black cast iron grate floor section'],
+      light: ['爱迪生裸灯泡暖黄光 — Edison bare bulb warm amber glow','工厂聚光灯定向照射 — factory spotlight directional beam','金属灯罩悬垂工业吊灯 — metal shade hanging industrial pendant'],
+      plant: ['无植物，以锈铁雕塑替代 — no plants, use rusted iron sculpture','玻璃瓶内小型多肉 — small succulents in glass jar collection','皮革绳绑定的竹子 — bamboo bundle tied with leather cord'],
+      rug: ['深棕牛皮地毯 — dark brown cowhide rug','回收牛仔布拼布地毯 — recycled denim patchwork rug','黑灰色粗纺羊毛地毯 — dark grey coarse wool rug'],
+    },
+    '未来科技': {
+      wall: ['无缝哑光白色建筑面板 — seamless matte white architectural panel','浅灰色磨砂玻璃隔断 — frosted light grey glass partition','金属拉丝铝板墙面 — brushed aluminium panel wall'],
+      floor: ['纯白抛光陶瓷大板地砖 — pure white polished large porcelain tile','浅灰色环氧树脂地面 — light grey epoxy resin floor','透明玻璃地板（局部） — transparent glass floor section'],
+      light: ['冷白LED灯带嵌入式照明 — cool white recessed LED strip lighting','蓝白色调情景氛围灯 — blue-white ambient mood lighting','均匀无影顶部泛光 — even shadowless ceiling flood light'],
+      plant: ['无绿植 — no plants','单枝白色兰花（白色方盆） — single white orchid in white square pot','水培透明玻璃球悬浮绿植 — hydroponic glass sphere floating plant'],
+      rug: ['无地毯 — bare floor','纯白圆形简约地毯 — pure white round minimal rug','浅灰金属光泽地毯 — light grey metallic sheen rug'],
+    },
+    '高级暗黑': {
+      wall: ['深炭黑色丝绒漆面墙 — deep charcoal black velvet-finish painted wall','午夜海军蓝护墙板 — midnight navy blue wall paneling','酒红色大马士革壁纸 — rich burgundy damask wall covering'],
+      floor: ['深黑大理石地砖 — deep black marble tile floor','深色烟熏橡木地板 — dark smoked oak floor','黑色抛光水磨石地面 — black polished terrazzo floor'],
+      light: ['极低环境光+精准聚光 — very low ambient, precise spot on furniture','烛光与暖色LED组合 — candlelight combined with warm LED accent','暗调戏剧性侧光 — dark dramatic side-lighting'],
+      plant: ['黑色花瓶+深红玫瑰 — black vase with deep red roses','干枯黑色枝条雕塑 — sculptural blackened dry branch','无绿植（高冷感） — no plants, keep it cold and sleek'],
+      rug: ['深黑长绒圆形地毯 — deep black round shag rug','深紫色天鹅绒地毯 — deep purple velvet area rug','黑金几何图案地毯 — black and gold geometric rug'],
+    },
+    '后现代艺术': {
+      wall: ['一面鲜艳色彩强调墙（薄荷绿/珊瑚/芥末黄） — one vivid accent wall in mint/coral/mustard','不规则涂料色块墙面 — irregular paint block color wall','大尺幅当代艺术挂满墙 — gallery wall full of oversized contemporary art'],
+      floor: ['光滑白色地面（对比家具） — smooth white floor for contrast','彩色水磨石地面 — colorful terrazzo floor','不规则瓷砖拼贴 — eclectic mixed tile patchwork floor'],
+      light: ['颜色光影艺术投影 — colored light projection artwork','混搭多点光源 — eclectic multi-source lighting mix','大型天窗漫射自然光 — large skylight diffused natural light'],
+      plant: ['超大热带植物（多株） — oversized tropical plants in multiple pots','鲜切花大束（大胆配色） — bold colorful large-cut flower arrangement','多肉植物艺术展示墙 — succulent art display wall'],
+      rug: ['超大波普图案地毯 — oversized pop art pattern rug','多张地毯叠加 — layered multiple rugs','抽象手绘图案地毯 — abstract hand-painted pattern rug'],
+    },
+    '奶油侘寂': {
+      wall: ['温白粗糙灰泥墙（可见手抹纹理） — warm white rough plaster with hand-applied texture','米色原土坯墙 — natural adobe-tone earthen wall','未经处理的生石灰墙 — raw lime wash wall with organic texture'],
+      floor: ['浅色做旧实木地板 — pale aged solid wood floor','哑光米白陶土砖 — matte ivory clay tile floor','抛光天然石板地面 — honed natural stone slab floor'],
+      light: ['清晨柔和侧光（无直射） — soft gentle morning side light, no harsh direct sun','阴天漫散射自然光 — overcast day diffused natural light','纸质灯罩暖白光 — warm white paper shade lamp light'],
+      plant: ['单枝枯树枝（粗陶花瓶） — single dry branch in rough ceramic vase','苔藓+小鹅卵石组合 — moss and pebble composition','单枝茶花或山茶 — single camellia or magnolia branch'],
+      rug: ['手工棉麻编织地毯（自然本色） — handwoven natural cotton-linen rug','羊毛毡片铺地 — wool felt mat','粗纺藏式羊毛地毯（素色） — Tibetan coarse wool solid-color rug'],
+    },
+    '北欧自然': {
+      wall: ['纯白桦木纹理墙面 — pure white birch-tone textured wall','浅灰蓝色哑光漆墙 — light grey-blue matte painted wall','白色护墙板（简洁线条） — white shiplap wall with clean lines'],
+      floor: ['浅色白蜡木地板 — light pale ash wood floor','白色水洗橡木地板 — white-washed oak floor','浅色竹制地板 — light natural bamboo floor'],
+      light: ['北欧纯净散射日光 — pure Scandinavian diffused daylight','冷白均匀自然光 — cool white even natural light','冬季柔和低角度日光 — soft low-angle winter daylight'],
+      plant: ['白陶盆绿萝/常青藤 — pothos or ivy in white ceramic pot','小型桦木盆栽白桦 — small birch tree in Nordic pot','干燥花茎（简约） — minimal dried flower stems'],
+      rug: ['纯羊毛浅米色地毯 — pure wool light oatmeal rug','黑白几何北欧图案地毯 — black and white Nordic geometric rug','天然羊皮小块地毯 — natural sheepskin throw rug'],
+    },
+    '日系禅意': {
+      wall: ['沙色和纸质感墙面 — sand-color washi paper texture wall','磨砂灰土坯质感 — matte grey clay plaster wall','竹格栅+白色背景 — bamboo lattice screen against white wall'],
+      floor: ['抛光深色混凝土地面 — honed dark concrete floor','天然石板铺地 — natural stone slab floor','浅色竹地板 — pale natural bamboo floor'],
+      light: ['侧窗柔和线性光 — soft linear side-window light','低角度禅意晨光 — low-angle zen morning light','和纸灯笼暖白漫光 — warm white washi paper lantern diffused light'],
+      plant: ['盆景松树（低矮） — bonsai pine tree, low and sculptural','苔藓石景组合 — moss and stone composition','单枝樱花（细长竹花瓶） — single cherry blossom branch in tall bamboo vase'],
+      rug: ['无地毯（净地面） — no rug, pure floor','天然草席（榻榻米质感） — natural grass mat, tatami feel','简约麻编方形地毯 — simple square jute mat'],
+    },
+    '热带度假': {
+      wall: ['白灰泥墙（开放式空间感） — whitewashed plaster open-air feel wall','竹编装饰背景墙 — woven bamboo decorative wall panel','漂白柚木板墙 — bleached teak plank wall'],
+      floor: ['柚木或藤木户外感地板 — teak or rattan-look outdoor-feel floor','白色鹅卵石户外石地面 — white pebble outdoor stone floor','竹制地板 — natural bamboo floor'],
+      light: ['热带正午强烈白日光 — tropical midday intense white sunlight','棕榈叶影斑驳光影 — dappled light through palm leaves','暖白户外灯串 — warm white outdoor string lights at dusk'],
+      plant: ['大型天堂鸟植物（黑色陶盆） — oversized bird of paradise in black ceramic pot','香蕉叶+芭蕉组合 — banana leaf and heliconia cluster','多株热带绿植丛 — lush tropical plant cluster'],
+      rug: ['天然椰棕编织地毯 — natural coir woven rug','蓝白条纹户外地毯 — blue and white stripe outdoor rug','棕色藤编圆形地毯 — brown rattan round rug'],
+    },
+    '美式庄园': {
+      wall: ['白色槽缝板（Shiplap）墙面 — white shiplap wall paneling','奶油色舌槽板（Beadboard） — cream beadboard paneling','做旧白色砖墙 — whitewashed aged brick wall'],
+      floor: ['松木宽板地板（做旧处理） — wide-plank rustic pine floor','石英岩地砖 — quartzite stone tile floor','深棕色橡木地板 — rich dark brown oak floor'],
+      light: ['充裕温暖庄园午后光 — generous warm farmhouse afternoon light','穿越麻布窗帘的柔光 — soft light through burlap curtains','壁炉橘红火光 — orange-red fireplace glow'],
+      plant: ['棉花枝+干麦穗（木桶花瓶） — cotton stems and wheat in wooden barrel vase','大型绿色蕨类（篮编花盆） — large green fern in wicker basket','向日葵束（陶瓷罐） — sunflower bundle in ceramic crock'],
+      rug: ['传统美式印花棉织地毯 — traditional American printed cotton rug','牛皮图案地毯 — cowhide pattern rug','红蓝格子羊毛地毯 — red and blue plaid wool rug'],
+    },
+    '波西米亚': {
+      wall: ['砖红色+赭石色混合灰泥墙 — brick red and ochre mixed plaster wall','挂毯覆盖白墙 — tapestry-covered white wall','多色调马赛克装饰腰线 — colorful mosaic tile border detail'],
+      floor: ['混铺多张复古地毯 — layered multiple vintage rugs','赤陶砖+彩色瓷砖点缀 — terracotta with colorful tile accents','磨损木地板（裸露纹路） — worn exposed grain wood floor'],
+      light: ['彩色玻璃灯笼暖光 — colorful glass lantern warm light','垂挂麻绳灯串 — hanging macramé string lights','日落橙红光从厚布帘透入 — sunset orange through layered drapes'],
+      plant: ['多株蔓生植物（悬挂+地面） — multiple trailing plants hanging and on floor','仙人掌+多肉混搭 — cactus and succulent mixed collection','芒草+孔雀羽毛插花 — pampas grass and peacock feather arrangement'],
+      rug: ['多张手工编织地毯叠铺 — multiple hand-woven rugs layered','土耳其基里姆花纹地毯 — Turkish kilim pattern rug','摩洛哥柏柏尔羊毛地毯 — Moroccan Berber wool rug'],
+    },
   };
 
   const STYLE_GUIDES = {
-    '法式清新': 'Modern French Parisian apartment aesthetic, editorial Milk Decoration magazine style, high ceilings with ornate plaster moldings, bright and airy atmosphere, effortlessly chic, soft natural light.',
-    '奶油侘寂': 'Japandi Wabi-sabi philosophy, embrace of imperfection and transience, contemplative silence, warm neutral organic tones, handmade textures, slow living aesthetic.',
-    '法式古典': 'Opulent Haussmann Parisian grand salon, gilded details and rich history, luxurious crystal and velvet, aristocratic refinement, baroque grandeur meets livable luxury.',
-    '现代极简': 'Gallery-like contemporary minimalism, silent luxury, razor-sharp lines and volumes, absence as design choice, monolithic forms, no excess — only essence.',
-    '意式优雅': 'Milanese high design sophistication, architectural arches and vaulted ceilings, travertine and velvet and linen, design museum curation, understated Italian luxury.',
-    '英式绅士': 'British heritage library and club atmosphere, dark oak paneling and leather-bound books, moody refined atmosphere, intellectual cosiness, patina of generations.'
+    '法式清新': 'Modern French / Parisian — bright airy white panel molding walls, herringbone or pale limestone floors, sheer linen curtains, cool crisp daylight from tall arched windows, slender olive tree or eucalyptus branches, feels like a curated Marais apartment in Paris, editorial Milk Decoration / AD France aesthetic',
+    '法式古典': 'Classic Haussmann French — formal cream walls with elaborate plaster cornice moldings, chevron parquet floor in warm honey oak, heavy silk drapes, gilded mirror above fireplace, crystal chandelier, traditional bourgeois Parisian salon, rich and opulent',
+    '意式优雅': 'Italian Elegance — Milanese sophistication, polished travertine or aged plaster walls, terrazzo or marble floors, curved architectural arches, warm amber candlelight accents, lush velvet and brushed brass, feels like a palazzo in Milan or Florence',
+    'Art Deco': 'Art Deco Revival — bold geometric wall paneling, mirrored surfaces with black lacquer trim, rich jewel-tone accents (deep emerald, sapphire, burgundy), gold metalwork and sunburst motifs, glamorous and theatrical',
+    '地中海': 'Mediterranean Coast — whitewashed plaster arched walls, terracotta tile or pale stone floor, warm dappled sunlight, blue-white pottery accents, linen and rattan textures, relaxed Santorini or Amalfi Coast villa atmosphere',
+    '英式绅士': 'British Heritage — dark oak paneled or deep forest green walls, Persian rug, brass reading lamp, framed botanical prints, warm fireplace glow, refined English country house meets London club',
+    '现代极简': 'Contemporary Minimal — pure smooth white walls with zero decoration, wide-plank pale ash floor, absolute silence, only the furniture speaks, like a gallery installation, silent luxury',
+    '轻奢都市': 'Urban Luxury — polished dark concrete or matte charcoal plaster walls, black steel window frames, brass and black metal accents, moody dramatic lighting, luxury penthouse in New York or Hong Kong',
+    '工业酷感': 'Industrial Loft — raw exposed brick or bare concrete walls, dark iron ceiling details, worn oak plank floor, Edison bulb pendants, matte black metal frames, masculine and edgy Brooklyn loft energy',
+    '未来科技': 'Futuristic Tech — seamless matte white architectural surfaces, cool LED strip lighting, glass and polished chrome, minimal floating furniture, feels like a luxury spaceship interior',
+    '高级暗黑': 'Dark Moody Luxury — deep charcoal, midnight navy or rich burgundy walls, dramatic low ambient lighting with precise spotlights, smoked glass and black marble, mysterious like a high-end private members club',
+    '后现代艺术': 'Postmodern Art — bold sculptural furniture as statement objects, one vivid accent color wall, large-scale contemporary art, unexpected material combinations, playful and intellectually confident',
+    '奶油侘寂': 'Japandi Wabi-sabi — warm white rough plaster walls with visible texture, raw linen and undyed cotton, pale aged wood, imperfect hand-thrown ceramics, quiet and deeply contemplative, beauty in imperfection',
+    '北欧自然': 'Scandinavian Natural — crisp white birch-toned walls, light ash wood, natural fiber jute or wool rugs, functional beauty with zero excess, lots of diffused natural light, calm and deeply livable',
+    '日系禅意': 'Japanese Zen — sand-colored shoji screen or smooth clay walls, polished concrete or stone floors, very low furniture profile, moss or bonsai, single ikebana arrangement, absolute stillness and breathing space',
+    '热带度假': 'Tropical Resort — whitewashed walls open to tropical air, teak and wicker, large banana leaf or monstera plants, natural rattan shades filtering warm light, luxury Bali or Maldives villa atmosphere',
+    '美式庄园': 'American Country — warm white or cream shiplap wall paneling, wide-plank pine floor, rustic reclaimed wood beams, cotton and dried flower arrangements, relaxed welcoming southern estate farmhouse',
+    '波西米亚': 'Boho Eclectic — layered global textiles, macramé wall hangings, mixed vintage rugs, abundant trailing plants and dried pampas grass, warm terracotta and saffron accents, free-spirited and richly personal',
   };
 
-  // ─── UPLOAD ──────────────────────────────────────────────────────────────────
-  const uploadZone = document.getElementById('uploadZone');
-  const fileInput = document.getElementById('fileInput');
+  const STYLE_SUBS = {
+    '法式清新':'French Contemporary','法式古典':'Classic Haussmann','意式优雅':'Italian Elegance',
+    'Art Deco':'Geometric Opulence','地中海':'Mediterranean Coast','英式绅士':'British Heritage',
+    '现代极简':'Contemporary Minimal','轻奢都市':'Urban Luxury','工业酷感':'Industrial Loft',
+    '未来科技':'Futuristic Tech','高级暗黑':'Dark Moody Luxury','后现代艺术':'Postmodern Art',
+    '奶油侘寂':'Japandi Wabi-sabi','北欧自然':'Scandinavian Natural','日系禅意':'Japanese Zen',
+    '热带度假':'Tropical Resort','美式庄园':'American Country','波西米亚':'Boho Eclectic',
+  };
 
-  uploadZone.addEventListener('click', () => fileInput.click());
+  // ── Populate selects from SCENE_CONFIG ──
+  function populateSceneSelects(style) {
+    const cfg = SCENE_CONFIG[style];
+    if (!cfg) return;
+    const fields = { wallColor: cfg.wall, floorType: cfg.floor, lightMood: cfg.light, plantType: cfg.plant, rugType: cfg.rug };
+    Object.entries(fields).forEach(([id, options]) => {
+      const sel = document.getElementById(id);
+      if (!sel) return;
+      sel.innerHTML = options.map((o, i) => `<option value="${o}">${o.split(' — ')[0]}${i === 0 ? ' ★' : ''}</option>`).join('');
+    });
+    document.getElementById('sceneIndicatorText').textContent = `当前风格：${style} — 场景已自动配置`;
+  }
 
-  uploadZone.addEventListener('dragover', e => {
+  // Drag and drop
+  const zone = document.getElementById('uploadZone');
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+  zone.addEventListener('drop', e => {
     e.preventDefault();
-    uploadZone.classList.add('dragover');
+    zone.classList.remove('dragover');
+    handleFiles(Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/')));
   });
 
-  uploadZone.addEventListener('dragleave', e => {
-    if (!uploadZone.contains(e.relatedTarget)) uploadZone.classList.remove('dragover');
-  });
+  function handleUpload(e) {
+    handleFiles(Array.from(e.target.files));
+    e.target.value = '';
+  }
 
-  uploadZone.addEventListener('drop', e => {
-    e.preventDefault();
-    uploadZone.classList.remove('dragover');
-    const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
-    if (files.length) processFiles(files);
-  });
-
-  fileInput.addEventListener('change', e => {
-    const files = Array.from(e.target.files);
-    if (files.length) processFiles(files);
-    fileInput.value = '';
-  });
-
-  function processFiles(files) {
+  function handleFiles(files) {
     files.forEach((file, i) => {
       const reader = new FileReader();
       reader.onload = ev => {
-        const id = String(Date.now() + i + Math.floor(Math.random() * 1000));
+        const baseName = file.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ');
         products.push({
-          id,
-          name: file.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' '),
+          id: Date.now() + i + Math.random(),
+          name: baseName,
           type: PRODUCT_TYPES[products.length % PRODUCT_TYPES.length],
           src: ev.target.result,
-          mimeType: file.type,
           selected: true
         });
         renderGrid();
-        updateSidebarPreview();
+        updatePreview();
       };
       reader.readAsDataURL(file);
     });
   }
 
-  // ─── GRID ─────────────────────────────────────────────────────────────────────
   function renderGrid() {
     const grid = document.getElementById('productGrid');
-    const counterRow = document.getElementById('counterRow');
-    const selCount = products.filter(p => p.selected).length;
-
-    counterRow.style.display = products.length > 0 ? 'flex' : 'none';
-    document.getElementById('selCount').textContent = selCount;
-
+    const total = products.length;
+    const sel = products.filter(p => p.selected).length;
+    document.getElementById('counterRow').style.display = total > 0 ? 'flex' : 'none';
+    document.getElementById('totalCount').textContent = total;
+    document.getElementById('selCount').textContent = sel;
+    if (total === 0) { grid.innerHTML = ''; return; }
     grid.innerHTML = '';
     products.forEach(p => {
       const card = document.createElement('div');
       card.className = 'product-card' + (p.selected ? ' selected' : '');
-
-      const typeOptions = PRODUCT_TYPES.map(t =>
-        `<option value="${t}" ${t === p.type ? 'selected' : ''}>${t.split('/')[0]}</option>`
-      ).join('');
-
       card.innerHTML = `
-        <button class="del-btn" data-id="${p.id}" title="删除">×</button>
+        <button class="del-btn" onclick="deleteProduct('${p.id}', event)">×</button>
         <div class="product-check">
-          <svg viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2 2L7.5 2" stroke="white" stroke-width="1.5"/></svg>
+          <svg viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2 2L7.5 2" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
-        <img src="${p.src}" class="product-thumb" alt="${p.name}">
+        <img src="${p.src}" class="product-thumb" alt="">
         <div class="product-info">
-          <input class="product-name-input" type="text" value="${p.name}" data-id="${p.id}" title="点击编辑名称">
-          <select class="product-type-select" data-id="${p.id}">${typeOptions}</select>
+          <input class="product-name-input" type="text" value="${p.name}"
+            onclick="event.stopPropagation()"
+            onchange="updateProductName('${p.id}', this.value)" title="点击编辑名称">
+          <select class="product-type-select" onclick="event.stopPropagation()" onchange="updateProductType('${p.id}', this.value)">
+            ${PRODUCT_TYPES.map(t => `<option value="${t}" ${t === p.type ? 'selected' : ''}>${t.split('/')[0]}</option>`).join('')}
+          </select>
         </div>`;
-
-      // Toggle select
-      card.addEventListener('click', e => {
-        if (e.target.classList.contains('del-btn') ||
-            e.target.classList.contains('product-name-input') ||
-            e.target.classList.contains('product-type-select')) return;
-        const prod = products.find(x => x.id === p.id);
-        if (prod) { prod.selected = !prod.selected; renderGrid(); updateSidebarPreview(); }
-      });
-
-      // Delete
-      card.querySelector('.del-btn').addEventListener('click', e => {
-        e.stopPropagation();
-        products = products.filter(x => x.id !== p.id);
-        renderGrid();
-        updateSidebarPreview();
-      });
-
-      // Edit name
-      card.querySelector('.product-name-input').addEventListener('change', e => {
-        const prod = products.find(x => x.id === p.id);
-        if (prod) { prod.name = e.target.value; updateSidebarPreview(); }
-      });
-
-      // Edit type
-      card.querySelector('.product-type-select').addEventListener('change', e => {
-        const prod = products.find(x => x.id === p.id);
-        if (prod) { prod.type = e.target.value; updateSidebarPreview(); }
-      });
-
+      card.addEventListener('click', () => { p.selected = !p.selected; renderGrid(); updatePreview(); });
       grid.appendChild(card);
     });
   }
 
-  function toggleSelectAll() {
-    allSelectedFlag = !allSelectedFlag;
-    products.forEach(p => p.selected = allSelectedFlag);
-    renderGrid();
-    updateSidebarPreview();
+  function deleteProduct(id, e) {
+    e.stopPropagation();
+    products = products.filter(p => p.id != id);
+    renderGrid(); updatePreview();
   }
 
-  // ─── STYLE ────────────────────────────────────────────────────────────────────
+  function updateProductName(id, val) {
+    const p = products.find(x => x.id == id);
+    if (p) { p.name = val; updatePreview(); }
+  }
+
+  function updateProductType(id, val) {
+    const p = products.find(x => x.id == id);
+    if (p) p.type = val;
+  }
+
+  function toggleSelectAll() {
+    allSelected = !allSelected;
+    products.forEach(p => p.selected = allSelected);
+    renderGrid(); updatePreview();
+  }
+
   function selectStyle(el) {
     document.querySelectorAll('.style-pill').forEach(p => p.classList.remove('active'));
     el.classList.add('active');
     selectedStyle = el.dataset.style;
-    populateSelects(selectedStyle);
-    document.getElementById('sceneIndicatorText').textContent = `「${selectedStyle}」风格已自动匹配场景配置`;
-    updateSidebarPreview();
+    populateSceneSelects(selectedStyle);
+    updatePreview();
   }
 
-  function populateSelects(style) {
-    const cfg = SCENE_CONFIG[style];
-    const mapping = [
-      { id: 'wallColor', key: 'wall' },
-      { id: 'floorType', key: 'floor' },
-      { id: 'lightMood', key: 'light' },
-      { id: 'plantType', key: 'plant' },
-      { id: 'rugType', key: 'rug' }
-    ];
-    mapping.forEach(({ id, key }) => {
-      const sel = document.getElementById(id);
-      sel.innerHTML = cfg[key].map(o => {
-        const displayName = o.split(' — ')[0];
-        return `<option value="${o}">${displayName}</option>`;
-      }).join('');
-    });
-  }
-
-  // ─── SIDEBAR PREVIEW ──────────────────────────────────────────────────────────
-  function updateSidebarPreview() {
+  function updatePreview() {
     const brand = document.getElementById('brandName').value || 'RH FACTORY';
     document.getElementById('previewBrand').textContent = brand;
-    document.getElementById('previewStyle').textContent = selectedStyle;
-
+    document.getElementById('previewStyle').textContent = `${selectedStyle} · ${STYLE_SUBS[selectedStyle] || ''}`;
     const sel = products.filter(p => p.selected);
     const container = document.getElementById('previewItems');
     if (sel.length === 0) {
-      container.innerHTML = '<div class="preview-item" style="opacity:0.3;font-size:10px;">暂无已选产品</div>';
+      container.innerHTML = '<div class="preview-empty">上传产品图片后显示</div>';
     } else {
-      container.innerHTML = sel.map(p =>
-        `<div class="preview-item"><div class="preview-item-dot"></div><span>${p.name}</span></div>`
-      ).join('');
+      container.innerHTML = sel.map(p => `
+        <div class="preview-item">
+          <div class="preview-item-dot"></div>
+          <span>${p.name} <span style="opacity:0.5">· ${p.type.split('/')[0]}</span></span>
+        </div>`).join('');
     }
   }
 
-  // ─── PROMPT BUILDER ───────────────────────────────────────────────────────────
-  function buildPromptText() {
+  document.getElementById('brandName').addEventListener('input', updatePreview);
+
+  function generatePrompt() {
     const selected = products.filter(p => p.selected);
+    if (selected.length === 0) { alert('请先上传并选择至少一件产品图片'); return; }
     const brand = document.getElementById('brandName').value || 'RH FACTORY';
     const room = document.getElementById('roomType').value;
     const wall = document.getElementById('wallColor').value;
@@ -1266,204 +1396,93 @@
     const rug = document.getElementById('rugType').value;
     const model = document.getElementById('modelType').value;
     const extra = document.getElementById('extraNotes').value.trim();
-    const styleGuide = STYLE_GUIDES[selectedStyle];
+    const styleGuide = STYLE_GUIDES[selectedStyle] || selectedStyle;
+    const productLines = selected.map((p, i) => `  Image ${i+1}: ${p.name} (${p.type})`).join('\n');
+    const half = Math.ceil(selected.length / 2);
+    const gridRow1 = selected.slice(0, half).map((p, i) => `  ${i+1}. ${p.name} — ${p.type}`).join('\n');
+    const gridRow2 = selected.slice(half).map((p, i) => `  ${half+i+1}. ${p.name} — ${p.type}`).join('\n');
+    const modelLine = model === 'none' ? 'No model — keep the scene clean and product-focused.' : `Include a female model: ${model}. Standing naturally left of center, proportioned to furniture, subtle ground shadow, do not change her outfit.`;
 
-    const productList = selected.map((p, i) =>
-      `  ${i + 1}. ${p.name} (${p.type.split('/')[1] || p.type.split('/')[0]})`
-    ).join('\n');
+    const prompt = `I am providing ${selected.length} product images. Use ALL of them EXACTLY as shown.
+DO NOT redesign, recolor, or replace any product. These products are LOCKED.
 
-    const modelDesc = model === 'no people' ? 'No people in the scene.' : `Include: ${model}.`;
+================================================================
+ATTACHED PRODUCTS — use these images exactly as-is:
+================================================================
+${productLines}
 
-    return `Task: Create a photorealistic luxury interior moodboard scene for furniture brand "${brand}".
+================================================================
+LAYOUT: ${brand} Soft Furnishing Mood Board (portrait, 3:4 ratio)
+================================================================
 
-STYLE DIRECTION: ${selectedStyle}
-${styleGuide}
+TOP SECTION (upper 58%): Photorealistic ${room} lifestyle scene
 
-SPACE: ${room}
+Overall style: ${styleGuide}
 
-SCENE ELEMENTS:
-- Wall: ${wall}
+Environment (use exactly these settings):
+- Walls: ${wall}
 - Floor: ${floor}
 - Lighting: ${light}
-- Plants: ${plant}
+- Greenery / plants: ${plant}
 - Rug: ${rug}
-- People: ${modelDesc}
+- ${modelLine}
 
-FURNITURE PRODUCTS TO INCLUDE (${selected.length} items):
-${productList}
+Arrange all ${selected.length} products naturally in the scene.
+Each product must be clearly recognizable — exact same color, material, silhouette.
+Do NOT add any furniture not shown in the provided images.
 
-CRITICAL INSTRUCTIONS:
-- Use ALL provided furniture products EXACTLY as shown in the reference images.
-- Maintain precise colors, materials, and proportions of each piece.
-- Arrange items according to professional interior design spatial rules.
-- Each product must be clearly visible and properly lit.
-- The scene must feel editorial-quality, like a luxury magazine spread.
-- No text, labels, or watermarks on the furniture or in the scene.
-${extra ? `\nSPECIAL REQUIREMENTS:\n${extra}` : ''}
+================================================================
+BOTTOM SECTION (lower 42%): Product catalog grid
+================================================================
+Background: light warm white (#F8F6F2)
+Dashed thin border rectangle around all product cells
+Top-right: "Living room soft decoration design scheme"
 
-OUTPUT: One cinematic portrait-format image (3:4 ratio), high resolution, photorealistic rendering.`;
+Row 1:
+${gridRow1}
+
+Row 2:
+${gridRow2}
+
+Each cell: white background, product centered, circled number top-left,
+bilingual label below (Chinese / English), clean sans-serif font.
+
+================================================================
+BRANDING:
+================================================================
+Top-left: "${brand}" — large bold editorial serif, 2 lines
+Below brand: "Living room option" — small italic serif, warm gray
+Top-right: "Living room option" — wide-tracked light sans-serif
+${extra ? `\nSPECIAL REQUIREMENTS: ${extra}` : ''}
+
+================================================================
+CRITICAL: Product colors/materials/shapes are LOCKED. Only environment adapts.
+Portrait 3:4 ratio. High-end editorial quality.
+================================================================`;
+
+    document.getElementById('outputText').textContent = prompt;
+    document.getElementById('outputPanel').classList.add('visible');
+    document.getElementById('tipBox').classList.add('visible');
+    setTimeout(() => document.getElementById('outputPanel').scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
   }
 
-  function buildPrompt() {
-    const selected = products.filter(p => p.selected);
-    if (selected.length === 0) {
-      document.getElementById('promptEditor').value = '请先上传并选择至少一件产品。';
-      return;
-    }
-    document.getElementById('promptEditor').value = buildPromptText();
-  }
-
-  function copyPromptText() {
-    const text = document.getElementById('promptEditor').value;
-    if (!text.trim()) { buildPrompt(); }
-    navigator.clipboard.writeText(document.getElementById('promptEditor').value).then(() => {
-      const confirm = document.getElementById('copyConfirm');
-      confirm.classList.add('visible');
-      setTimeout(() => confirm.classList.remove('visible'), 2000);
+  function copyPrompt() {
+    const text = document.getElementById('outputText').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = '已复制 ✓';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = '复制全部'; btn.classList.remove('copied'); }, 2500);
+    }).catch(() => {
+      const range = document.createRange();
+      range.selectNodeContents(document.getElementById('outputText'));
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
     });
   }
 
-  // ─── GENERATE ─────────────────────────────────────────────────────────────────
-  async function generateMoodboard() {
-    const selected = products.filter(p => p.selected);
-    if (selected.length === 0) { alert('请先上传并选择至少一件产品。'); return; }
-
-    const apiKey = document.getElementById('apiKeyInput').value.trim();
-    if (!apiKey) { alert('请填写 Google API Key。'); return; }
-
-    // Get prompt from editor if filled, else build fresh
-    let promptText = document.getElementById('promptEditor').value.trim();
-    if (!promptText) promptText = buildPromptText();
-
-    // UI: Loading state
-    setLoadingState(true);
-
-    // Build parts: text prompt + all selected product images
-    const contentParts = [
-      { text: promptText },
-      ...selected.map(p => ({
-        inlineData: {
-          mimeType: p.mimeType || p.src.split(';')[0].split(':')[1],
-          data: p.src.split(',')[1]
-        }
-      }))
-    ];
-
-    const requestBody = {
-      contents: [{
-        role: 'user',
-        parts: contentParts
-      }],
-      generationConfig: {
-        responseModalities: ['TEXT', 'IMAGE']
-      }
-    };
-
-    try {
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-goog-api-key': apiKey
-          },
-          body: JSON.stringify(requestBody)
-        }
-      );
-
-      if (!response.ok) {
-        const errData = await response.json().catch(() => ({}));
-        const msg = errData.error?.message || `HTTP ${response.status}`;
-        throw new Error(msg);
-      }
-
-      const data = await response.json();
-      console.log('Gemini raw response:', JSON.stringify(data).slice(0, 500));
-
-      if (!data.candidates || data.candidates.length === 0) {
-        const blocked = data.promptFeedback?.blockReason;
-        throw new Error(blocked ? `内容被安全策略拦截：${blocked}` : 'API 返回无候选结果');
-      }
-
-      const parts = data.candidates[0]?.content?.parts || [];
-      // 支持两种字段名：inline_data（旧）和 inlineData（新SDK）
-      const imagePart = parts.find(p => p.inlineData || p.inline_data);
-
-      if (imagePart) {
-        const imgData = imagePart.inlineData || imagePart.inline_data;
-        const mime = imgData.mimeType || imgData.mime_type;
-        const b64 = imgData.data;
-        lastGeneratedDataUrl = `data:${mime};base64,${b64}`;
-
-        const imgEl = document.getElementById('finalMoodboardImage');
-        imgEl.src = lastGeneratedDataUrl;
-        imgEl.onload = () => setLoadingState(false, 'success');
-        imgEl.onerror = () => setLoadingState(false, 'error', '图片解码失败');
-      } else {
-        const textPart = parts.find(p => p.text);
-        const reason = data.candidates[0]?.finishReason || '';
-        const msg = textPart?.text
-          ? `模型回复：${textPart.text.slice(0, 100)}`
-          : `未返回图像（finishReason: ${reason}）`;
-        throw new Error(msg);
-      }
-
-    } catch (err) {
-      console.error('Gemini API Error:', err);
-      setLoadingState(false, 'error', err.message);
-    }
-  }
-
-  function setLoadingState(loading, result, errorMsg) {
-    const placeholder = document.getElementById('previewPlaceholder');
-    const spinner = document.getElementById('loadingOverlay');
-    const imgEl = document.getElementById('finalMoodboardImage');
-    const btn = document.getElementById('generateBtn');
-    const dlBtn = document.getElementById('downloadBtn');
-
-    if (loading) {
-      placeholder.style.display = 'none';
-      imgEl.style.display = 'none';
-      spinner.style.display = 'flex';
-      btn.disabled = true;
-      btn.textContent = '生成中...';
-      dlBtn.classList.remove('visible');
-    } else {
-      spinner.style.display = 'none';
-      btn.disabled = false;
-      btn.textContent = '生成方案图 →';
-
-      if (result === 'success') {
-        imgEl.style.display = 'block';
-        placeholder.style.display = 'none';
-        dlBtn.classList.add('visible');
-      } else {
-        imgEl.style.display = 'none';
-        placeholder.style.display = 'block';
-        placeholder.innerHTML = `⚠ 生成失败<br><span style="font-size:10px;opacity:0.6">${errorMsg || '请检查网络或 API Key 额度'}</span>`;
-      }
-    }
-  }
-
-  // ─── DOWNLOAD ────────────────────────────────────────────────────────────────
-  function downloadImage() {
-    if (!lastGeneratedDataUrl) return;
-    const a = document.createElement('a');
-    const brand = document.getElementById('brandName').value.replace(/\s+/g, '_') || 'RH_FACTORY';
-    a.href = lastGeneratedDataUrl;
-    a.download = `${brand}_${selectedStyle}_moodboard.jpg`;
-    a.click();
-  }
-
-  // ─── INIT ─────────────────────────────────────────────────────────────────────
-  document.addEventListener('DOMContentLoaded', () => {
-    populateSelects('法式清新');
-    updateSidebarPreview();
-
-    // Listen to brand name changes
-    document.getElementById('brandName').addEventListener('input', updateSidebarPreview);
-  });
+  // Init on load
+  populateSceneSelects('法式清新');
 </script>
 
 </body>
