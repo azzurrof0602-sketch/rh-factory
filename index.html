@@ -375,18 +375,24 @@
     padding: 2px 4px;
   }
 
-  .product-type-select {
+  .product-type-input {
     width: 100%;
     background: transparent;
     border: none;
+    border-top: 0.5px solid var(--border);
     font-size: 10px;
     color: var(--text-muted);
     font-family: 'DM Sans', sans-serif;
-    cursor: pointer;
+    cursor: text;
     text-align: center;
     outline: none;
-    padding: 1px 0;
-    appearance: none;
+    padding: 3px 2px;
+  }
+
+  .product-type-input:focus {
+    background: var(--sand);
+    border-radius: 0 0 3px 3px;
+    color: var(--espresso);
   }
 
   /* ── BLOCK ── */
@@ -768,6 +774,52 @@
     margin-left: 4px;
   }
 
+  /* ── MERGE ── */
+  .merge-btn {
+    font-size: 11px;
+    color: var(--gold);
+    background: rgba(196,163,90,0.1);
+    border: 0.5px solid rgba(196,163,90,0.4);
+    border-radius: 20px;
+    padding: 4px 12px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+  }
+  .merge-btn:hover { background: rgba(196,163,90,0.2); }
+
+  .merge-result {
+    margin-top: 1.25rem;
+    background: var(--warm-white);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .merge-result-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: var(--cream);
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .merge-result-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--brown);
+  }
+
+  .merge-tip {
+    font-size: 11px;
+    color: var(--text-muted);
+    padding: 8px 14px;
+    line-height: 1.6;
+  }
+
   /* ── SCROLLBAR ── */
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
@@ -879,10 +931,22 @@
 
       <div class="counter-row" id="counterRow" style="display:none">
         <span class="counter-text">已上传 <span id="totalCount">0</span> 件 · 已选 <span id="selCount">0</span> 件参与生成</span>
-        <button class="select-all-btn" onclick="toggleSelectAll()">全选 / 取消</button>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button class="select-all-btn" onclick="toggleSelectAll()">全选 / 取消</button>
+          <button class="merge-btn" id="mergeBtn" onclick="mergeImages()">合并成一张图 ↓</button>
+        </div>
       </div>
 
       <div class="product-grid" id="productGrid"></div>
+
+      <div class="merge-result" id="mergeResult" style="display:none">
+        <div class="merge-result-header">
+          <span class="merge-result-label">合并产品图 — 可直接上传到 ChatGPT / 其他 AI</span>
+          <button class="copy-btn" onclick="downloadMerged()">下载图片</button>
+        </div>
+        <canvas id="mergeCanvas" style="width:100%;border-radius:6px;border:0.5px solid rgba(61,46,40,0.12);display:block;"></canvas>
+        <p class="merge-tip">提示词已自动标注编号，上传此图后直接粘贴提示词即可</p>
+      </div>
     </div>
 
     <!-- STEP 2: STYLE -->
@@ -1265,7 +1329,11 @@
     Object.entries(fields).forEach(([id, options]) => {
       const sel = document.getElementById(id);
       if (!sel) return;
-      sel.innerHTML = options.map((o, i) => `<option value="${o}">${o.split(' — ')[0]}${i === 0 ? ' ★' : ''}</option>`).join('');
+      const opts = options.map((o, i) => {
+        const label = o.split(' — ')[0] + (i === 0 ? ' ★' : '');
+        return '<option value="' + o + '">' + label + '</option>';
+      });
+      sel.innerHTML = opts.join('');
     });
     document.getElementById('sceneIndicatorText').textContent = `当前风格：${style} — 场景已自动配置`;
   }
@@ -1316,6 +1384,7 @@
     products.forEach(p => {
       const card = document.createElement('div');
       card.className = 'product-card' + (p.selected ? ' selected' : '');
+      const safeId = 'p' + String(p.id).replace(/[^a-z0-9]/gi,'');
       card.innerHTML = `
         <button class="del-btn" onclick="deleteProduct('${p.id}', event)">×</button>
         <div class="product-check">
@@ -1325,10 +1394,16 @@
         <div class="product-info">
           <input class="product-name-input" type="text" value="${p.name}"
             onclick="event.stopPropagation()"
-            onchange="updateProductName('${p.id}', this.value)" title="点击编辑名称">
-          <select class="product-type-select" onclick="event.stopPropagation()" onchange="updateProductType('${p.id}', this.value)">
-            ${PRODUCT_TYPES.map(t => `<option value="${t}" ${t === p.type ? 'selected' : ''}>${t.split('/')[0]}</option>`).join('')}
-          </select>
+            onchange="updateProductName('${p.id}', this.value)"
+            placeholder="产品名称" title="点击编辑产品名称">
+          <input class="product-type-input" type="text" value="${p.type.split('/')[0]}"
+            list="type-suggestions-${safeId}"
+            onclick="event.stopPropagation()"
+            onchange="updateProductType('${p.id}', this.value)"
+            placeholder="产品类型" title="输入或选择类型">
+          <datalist id="type-suggestions-${safeId}">
+            ${PRODUCT_TYPES.map(t => `<option value="${t.split('/')[0]}">`).join('')}
+          </datalist>
         </div>`;
       card.addEventListener('click', () => { p.selected = !p.selected; renderGrid(); updatePreview(); });
       grid.appendChild(card);
@@ -1403,6 +1478,9 @@
     const gridRow2 = selected.slice(half).map((p, i) => `  ${half+i+1}. ${p.name} — ${p.type}`).join('\n');
     const modelLine = model === 'none' ? 'No model — keep the scene clean and product-focused.' : `Include a female model: ${model}. Standing naturally left of center, proportioned to furniture, subtle ground shadow, do not change her outfit.`;
 
+    // Build smart furniture placement rules based on selected product types
+    const placementRules = buildPlacementRules(selected, room);
+
     const prompt = `I am providing ${selected.length} product images. Use ALL of them EXACTLY as shown.
 DO NOT redesign, recolor, or replace any product. These products are LOCKED.
 
@@ -1427,9 +1505,39 @@ Environment (use exactly these settings):
 - Rug: ${rug}
 - ${modelLine}
 
-Arrange all ${selected.length} products naturally in the scene.
-Each product must be clearly recognizable — exact same color, material, silhouette.
-Do NOT add any furniture not shown in the provided images.
+================================================================
+INTERIOR DESIGN PLACEMENT RULES — follow strictly:
+================================================================
+${placementRules}
+
+================================================================
+SPATIAL LOGIC — must be realistic and professionally correct:
+================================================================
+FLOOR ITEMS (must sit on the floor, never on walls or ceiling):
+- Sofas, sectionals: against wall or floating with walkable space behind, NEVER floating mid-air
+- Coffee tables: centered in front of sofa, on top of rug if rug is present
+- Rugs: flat on floor ONLY, under the seating arrangement, NEVER on walls or vertical surfaces
+- Side tables / accent tables: beside sofa armrest or beside lounge chair, at arm height
+- Floor lamps: standing upright on floor beside sofa or chair, NEVER horizontal
+- Lounge chairs / armchairs: angled toward sofa at 30-45 degrees, facing the conversation area
+- Cabinets / sideboards: flush against wall, upright, NEVER tilted or floating
+- Sculptures / decorative objects: on floor, coffee table surface, or cabinet top only
+
+WALL ITEMS (must be mounted on wall surface):
+- Wall art / paintings: hung on wall at eye level (150-160cm center height), NEVER on floor leaning, NEVER on ceiling
+- Mirrors: hung on wall, NEVER on floor or ceiling
+
+CEILING ITEMS (must hang from ceiling):
+- Chandeliers / pendant lights: hanging from ceiling directly above the seating area center, NEVER sitting on furniture
+
+SURFACES:
+- Vases, decorative bowls, books: on coffee table top, side table top, or cabinet top ONLY
+- Nothing floats in mid-air
+
+PROPORTIONS:
+- All furniture must be correctly scaled relative to each other and to a human figure
+- A standard sofa is 85-90cm tall, coffee table is 40-45cm tall, side table is 55-65cm tall
+- Ceiling height should be 280-320cm for a realistic room feel
 
 ================================================================
 BOTTOM SECTION (lower 42%): Product catalog grid
@@ -1456,8 +1564,14 @@ Top-right: "Living room option" — wide-tracked light sans-serif
 ${extra ? `\nSPECIAL REQUIREMENTS: ${extra}` : ''}
 
 ================================================================
-CRITICAL: Product colors/materials/shapes are LOCKED. Only environment adapts.
-Portrait 3:4 ratio. High-end editorial quality.
+CRITICAL RULES:
+================================================================
+1. Product colors/materials/shapes are LOCKED — do not change them
+2. Only the environment adapts to the style direction
+3. ALL furniture placement must follow real interior design logic
+4. NO floating objects, NO rugs on walls, NO lamps on ceilings
+5. The scene must look like a real professionally designed room
+6. Portrait 3:4 ratio. High-end editorial quality — think AD Magazine
 ================================================================`;
 
     document.getElementById('outputText').textContent = prompt;
@@ -1483,6 +1597,184 @@ Portrait 3:4 ratio. High-end editorial quality.
 
   // Init on load
   populateSceneSelects('法式清新');
+
+  // ── SMART PLACEMENT RULES ──
+  function buildPlacementRules(selected, room) {
+    const types = selected.map(p => p.type.toLowerCase());
+    const hasType = (...keywords) => types.some(t => keywords.some(k => t.includes(k)));
+    const rules = [];
+
+    const isLivingRoom = room.includes('客厅') || room.includes('Living Room');
+    const isBedroom = room.includes('卧室') || room.includes('Bedroom');
+    const isDining = room.includes('餐厅') || room.includes('Dining');
+
+    if (isLivingRoom) {
+      if (hasType('沙发','sofa','sectional')) {
+        rules.push('SOFA: Place against the back wall or floating with at least 90cm walkway behind. Face toward the center of the room. This is the anchor piece.');
+      }
+      if (hasType('茶几','coffee','teapoy')) {
+        rules.push('COFFEE TABLE: Center directly in front of the sofa, 40-50cm gap from sofa edge. Must sit flat on the floor/rug. Never elevated or floating.');
+      }
+      if (hasType('单人','lounge','armchair','休闲椅')) {
+        rules.push('LOUNGE CHAIR: Place to the side of the sofa at a 30-45° angle, facing inward toward the conversation area. Never behind the sofa or facing away.');
+      }
+      if (hasType('边几','side table','accent table')) {
+        rules.push('SIDE TABLE: Place beside the sofa armrest or next to the lounge chair. Height should be level with the sofa arm. Never in the middle of the room.');
+      }
+    }
+
+    if (isBedroom) {
+      if (hasType('床','bed')) {
+        rules.push('BED: Center against the main wall (headboard touching wall), centered on that wall. Leave walkable space on both sides (minimum 60cm each side).');
+      }
+      if (hasType('床头','nightstand','bedside')) {
+        rules.push('BEDSIDE TABLE: One on each side of the bed, symmetric, at mattress height. Never at the foot of the bed.');
+      }
+    }
+
+    if (isDining) {
+      if (hasType('餐桌','dining table')) {
+        rules.push('DINING TABLE: Center of the room with chairs around all sides. Chandelier directly above the table center.');
+      }
+    }
+
+    // Universal rules for all room types
+    if (hasType('地毯','carpet','rug')) {
+      rules.push('RUG: Lay FLAT on the floor ONLY. Position under the seating arrangement so front legs of sofa rest on it. NEVER hang on walls, NEVER lean against anything. It is a horizontal floor element.');
+    }
+    if (hasType('挂画','wall art','painting','artwork','canvas')) {
+      rules.push('WALL ART: Mount on wall surface at eye level (picture center at 150-160cm height). NEVER place on floor, NEVER lean against furniture in the scene, NEVER on ceiling. It must appear to be properly hung.');
+    }
+    if (hasType('吊灯','chandelier','pendant')) {
+      rules.push('CHANDELIER: Hang from ceiling ONLY, centered above the main seating area or dining table. Never sitting on surfaces. Cord/chain goes straight up to ceiling.');
+    }
+    if (hasType('落地灯','floor lamp')) {
+      rules.push('FLOOR LAMP: Stand upright on floor, placed beside sofa end or beside lounge chair. The base sits on the floor. Never horizontal, never on tables.');
+    }
+    if (hasType('储物柜','cabinet','sideboard','wardrobe')) {
+      rules.push('CABINET: Stand upright flush against a wall. Vertical orientation. Never tilted, never floating. Doors face outward into the room.');
+    }
+    if (hasType('壁炉','fireplace')) {
+      rules.push('FIREPLACE: Built into or flush against a wall ONLY. Never freestanding in the middle of the room, NEVER near a bed headboard. Always a wall feature.');
+    }
+    if (hasType('镜子','mirror')) {
+      rules.push('MIRROR: Hung on wall ONLY, never on floor. If full-length, lean against wall at floor level or mount vertically.');
+    }
+    if (hasType('花瓶','vase','植物','plant')) {
+      rules.push('VASES / PLANTS: Place on floor (if large), on coffee table surface, on side table, or on cabinet top. Never floating, never on walls.');
+    }
+
+    if (rules.length === 0) {
+      rules.push('All furniture must be placed according to standard interior design principles: floor items on floor, wall items on walls, ceiling items on ceiling. Proper scale and realistic proportions throughout.');
+    }
+
+    return rules.map((r, i) => (i+1) + '. ' + r).join('\n');
+  }
+
+  // ── MERGE IMAGES ──
+  function mergeImages() {
+    const selected = products.filter(p => p.selected);
+    if (selected.length === 0) { alert('请先选择要合并的产品图片'); return; }
+
+    const cols = selected.length <= 3 ? selected.length : Math.ceil(Math.sqrt(selected.length));
+    const rows = Math.ceil(selected.length / cols);
+    const cellW = 400;
+    const cellH = 400;
+    const padding = 16;
+    const labelH = 44;
+    const gap = 12;
+    const canvasW = cols * cellW + (cols + 1) * gap;
+    const canvasH = rows * (cellH + labelH) + (rows + 1) * gap;
+
+    const canvas = document.getElementById('mergeCanvas');
+    canvas.width = canvasW;
+    canvas.height = canvasH;
+    const ctx = canvas.getContext('2d');
+
+    ctx.fillStyle = '#F8F5F0';
+    ctx.fillRect(0, 0, canvasW, canvasH);
+
+    let loaded = 0;
+    selected.forEach((p, i) => {
+      const col = i % cols;
+      const row = Math.floor(i / cols);
+      const x = gap + col * (cellW + gap);
+      const y = gap + row * (cellH + labelH + gap);
+
+      const img = new Image();
+      img.onload = () => {
+        // cell background
+        ctx.fillStyle = '#FFFFFF';
+        roundRect(ctx, x, y, cellW, cellH + labelH, 8);
+        ctx.fill();
+
+        // draw image centered with padding
+        const scale = Math.min((cellW - padding*2) / img.width, (cellH - padding*2) / img.height);
+        const dw = img.width * scale;
+        const dh = img.height * scale;
+        const dx = x + (cellW - dw) / 2;
+        const dy = y + (cellH - dh) / 2;
+        ctx.drawImage(img, dx, dy, dw, dh);
+
+        // number badge
+        ctx.fillStyle = '#3D2E28';
+        ctx.beginPath();
+        ctx.arc(x + 24, y + 24, 14, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#E8D5A3';
+        ctx.font = 'bold 14px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(i + 1, x + 24, y + 24);
+
+        // label background
+        ctx.fillStyle = '#F1EFE8';
+        ctx.fillRect(x, y + cellH, cellW, labelH);
+
+        // label text - product name
+        ctx.fillStyle = '#3D2E28';
+        ctx.font = '500 13px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        const name = p.name.length > 16 ? p.name.slice(0, 16) + '…' : p.name;
+        ctx.fillText(name, x + cellW / 2, y + cellH + 14);
+
+        // label text - type
+        ctx.fillStyle = '#9A8E86';
+        ctx.font = '11px sans-serif';
+        ctx.fillText(p.type, x + cellW / 2, y + cellH + 30);
+
+        loaded++;
+        if (loaded === selected.length) {
+          document.getElementById('mergeResult').style.display = 'block';
+          document.getElementById('mergeResult').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      };
+      img.src = p.src;
+    });
+  }
+
+  function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  }
+
+  function downloadMerged() {
+    const canvas = document.getElementById('mergeCanvas');
+    const link = document.createElement('a');
+    link.download = 'rh-factory-products.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  }
 </script>
 
 </body>
