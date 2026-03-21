@@ -3,9 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RH Factory · 小红书生成器</title>
+<title>RH Factory · 专业软装 Moodboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
 <style>
+/* ── 基础重置与变量 ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --ink:#1A1208; --esp:#3D2A1A; --brn:#7A5C3C; --sand:#C4A878;
@@ -22,225 +26,126 @@ nav{height:52px;background:rgba(240,234,224,0.96);backdrop-filter:blur(10px);bor
 .ntag{font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--brn);opacity:.7;}
 
 /* ── APP GRID ── */
-.app{display:grid;grid-template-columns:400px 1fr;min-height:calc(100vh - 52px);}
-
-/* ── LEFT PANEL ── */
+.app{display:grid;grid-template-columns:420px 1fr;min-height:calc(100vh - 52px);}
 .lpanel{background:var(--warm);border-right:0.5px solid var(--bd);overflow-y:auto;padding:20px 18px 48px;display:flex;flex-direction:column;gap:16px;}
+.rpanel{background:#EDEBE6;overflow-y:auto;padding:24px 20px 60px;display:flex;flex-direction:column;gap:28px;align-items:center;}
 
+/* ── 通用区块 ── */
 .sec{background:white;border:0.5px solid var(--bd);border-radius:var(--rlg);overflow:hidden;}
 .shead{padding:12px 16px;border-bottom:0.5px solid var(--bd);display:flex;align-items:center;gap:9px;}
 .snum{width:20px;height:20px;border-radius:50%;background:var(--esp);color:var(--gpal);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Cormorant Garamond',serif;font-style:italic;}
 .stitle{font-size:13px;font-weight:500;color:var(--esp);}
 .ssub{font-size:10px;color:var(--brn);opacity:.65;margin-left:auto;}
 .sbody{padding:14px 16px;}
+.scat{font-size:8px;letter-spacing:.17em;text-transform:uppercase;color:var(--sand);padding:8px 0 5px;border-bottom:0.5px solid var(--bd);margin-bottom:7px;}
 
-/* ── SCENE UPLOAD (Step 0) ── */
-.scene-zone{border:1px dashed var(--sand);border-radius:var(--r);padding:0;overflow:hidden;cursor:pointer;transition:border-color .2s;background:var(--cream);position:relative;aspect-ratio:3/2;}
+/* ── STEP 0: SCENE ── */
+.scene-zone{border:1px dashed var(--sand);border-radius:var(--r);padding:0;overflow:hidden;cursor:pointer;transition:all .2s;background:var(--cream);position:relative;aspect-ratio:3/2;}
 .scene-zone:hover{border-color:var(--gold);}
 .scene-zone.has-img{border-style:solid;border-color:var(--sand);}
 .scene-zone img{width:100%;height:100%;object-fit:cover;display:block;}
 .scene-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;pointer-events:none;}
 .scene-placeholder svg{width:28px;height:28px;opacity:.35;}
 .scene-placeholder p{font-size:11px;color:var(--brn);opacity:.7;text-align:center;line-height:1.5;}
-.scene-change{position:absolute;bottom:8px;right:8px;background:rgba(61,42,26,0.7);color:#fff;font-size:9px;letter-spacing:.1em;padding:4px 10px;border-radius:20px;opacity:0;transition:opacity .2s;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;}
+.scene-change{position:absolute;bottom:8px;right:8px;background:rgba(61,42,26,0.7);color:#fff;font-size:9px;padding:4px 10px;border-radius:20px;opacity:0;transition:opacity .2s;cursor:pointer;border:none;}
 .scene-zone:hover .scene-change{opacity:1;}
 
-/* ── PRODUCT GRID ── */
+/* ── STEP 1: PRODUCTS ── */
 .pzone{border:1px dashed var(--sand);border-radius:var(--r);padding:16px;text-align:center;cursor:pointer;transition:all .2s;background:var(--cream);}
-.pzone:hover,.pzone.over{border-color:var(--gold);background:rgba(196,163,90,0.05);}
-.pzone h3{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:400;color:var(--esp);margin-bottom:3px;}
-.pzone p{font-size:10px;color:var(--brn);opacity:.65;line-height:1.6;}
+.pzone:hover{border-color:var(--gold);background:rgba(196,163,90,0.05);}
+.pzone h3{font-family:'Cormorant Garamond',serif;font-size:15px;margin-bottom:3px;}
+.pzone p{font-size:10px;color:var(--brn);opacity:.65;}
 .pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:10px;}
-.pcard{background:var(--cream);border:0.5px solid var(--bd);border-radius:var(--r);padding:6px 5px 5px;cursor:pointer;transition:all .18s;position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;}
-.pcard:hover{border-color:var(--bdm);transform:translateY(-1px);}
+.pcard{background:var(--cream);border:0.5px solid var(--bd);border-radius:var(--r);padding:6px 5px;cursor:pointer;position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;}
 .pcard.sel{border:1.5px solid var(--esp);background:white;}
 .pcard img{width:62px;height:62px;object-fit:contain;border-radius:3px;}
-.pdel{display:none;position:absolute;top:-5px;right:-5px;width:15px;height:15px;border-radius:50%;background:var(--esp);border:none;cursor:pointer;color:var(--gpal);font-size:9px;align-items:center;justify-content:center;line-height:1;}
+.pdel{display:none;position:absolute;top:-5px;right:-5px;width:15px;height:15px;border-radius:50%;background:var(--esp);border:none;cursor:pointer;color:white;font-size:9px;align-items:center;justify-content:center;line-height:1;}
 .pcard:hover .pdel{display:flex;}
 .pchk{display:none;position:absolute;top:4px;left:4px;width:13px;height:13px;border-radius:50%;background:var(--esp);align-items:center;justify-content:center;}
 .pcard.sel .pchk{display:flex;}
 .pchk svg{width:7px;height:7px;}
-.pname{width:100%;background:transparent;border:none;font-size:8px;color:var(--esp);text-align:center;font-family:'DM Sans',sans-serif;outline:none;padding:1px;cursor:text;}
-.pname:focus{background:var(--parch);border-radius:2px;}
-.ptype{width:100%;background:transparent;border:none;border-top:0.5px solid var(--bd);font-size:8px;color:var(--brn);text-align:center;font-family:'DM Sans',sans-serif;outline:none;padding:2px 1px;cursor:text;}
-.ptype:focus{background:var(--parch);}
-.crow{display:flex;align-items:center;justify-content:space-between;margin-top:8px;font-size:10px;color:var(--brn);}
-.crow b{color:var(--esp);font-weight:500;}
-.selall{background:none;border:none;font-size:10px;color:var(--brn);text-decoration:underline;text-underline-offset:2px;cursor:pointer;font-family:'DM Sans',sans-serif;}
 
-/* ── STYLE PILLS ── */
-.scat{font-size:8px;letter-spacing:.17em;text-transform:uppercase;color:var(--sand);padding:8px 0 5px;border-bottom:0.5px solid var(--bd);margin-bottom:7px;}
-.scat:first-child{padding-top:0;}
+/* ── STEP 2: STYLE ── */
 .sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:3px;}
-.spill{padding:7px 5px;border:0.5px solid var(--bd);border-radius:var(--r);cursor:pointer;text-align:center;transition:all .18s;background:white;}
-.spill:hover{border-color:var(--sand);}
+.spill{padding:7px 5px;border:0.5px solid var(--bd);border-radius:var(--r);cursor:pointer;text-align:center;background:white;}
 .spill.on{background:var(--esp);border-color:var(--esp);}
 .spn{font-size:10px;font-weight:500;display:block;color:var(--ink);}
 .spill.on .spn{color:var(--gpal);}
-.spe{font-size:8px;color:var(--brn);display:block;margin-top:1px;}
-.spill.on .spe{color:var(--gpal);opacity:.6;}
 
-/* ── FORM ── */
-.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
-.ff{grid-column:span 2;}
-.fl{font-size:8.5px;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:var(--brn);margin-bottom:4px;display:block;}
-.atag{font-size:7px;background:rgba(196,163,90,.15);color:var(--gold);padding:1px 5px;border-radius:3px;letter-spacing:.05em;margin-left:3px;}
-.fc{width:100%;background:white;border:0.5px solid var(--bd);border-radius:var(--r);padding:7px 9px;font-size:11px;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none;transition:border-color .18s;appearance:none;}
-.fc:focus{border-color:var(--brn);}
+/* ── STEP 2.5: COLOR & MATERIALS ── */
+.color-input{width:36px;height:36px;border:none;border-radius:50%;padding:0;cursor:pointer;background:transparent;overflow:hidden;}
+.color-input::-webkit-color-swatch-wrapper {padding: 0;}
+.color-input::-webkit-color-swatch {border: 1px solid rgba(0,0,0,0.1); border-radius: 50%;}
+.m-upload-btn{width:40px;height:40px;border:1px dashed var(--brn);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--brn);font-size:18px;background:var(--cream);transition:all 0.2s;}
+.m-upload-btn:hover{background:var(--parch); border-color:var(--esp);}
+.mat-preview{position:relative;width:40px;height:40px;}
+.mat-preview img{width:100%;height:100%;object-fit:cover;border-radius:50%;border:1px solid var(--bd);box-shadow:0 2px 6px rgba(0,0,0,0.05);}
+.mat-preview button{position:absolute;top:-4px;right:-4px;width:14px;height:14px;border-radius:50%;background:var(--ink);color:white;border:none;font-size:8px;cursor:pointer;}
 
 /* ── BUTTONS ── */
 .btns{display:flex;flex-direction:column;gap:7px;}
 .bgen{width:100%;padding:13px;background:var(--gold);color:var(--esp);border:none;border-radius:var(--r);font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;letter-spacing:.06em;cursor:pointer;transition:all .18s;}
-.bgen:hover{background:#B8922F;transform:translateY(-1px);}
-.bgen:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+.bgen:hover{background:#B8922F;}
 .bsec{width:100%;padding:9px;background:transparent;border:0.5px solid var(--bdm);border-radius:var(--r);font-size:11px;color:var(--brn);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .18s;}
 .bsec:hover{background:var(--cream);}
 
-/* ── RIGHT PANEL ── */
-.rpanel{background:#EDEBE6;overflow-y:auto;padding:24px 20px 60px;display:flex;flex-direction:column;gap:28px;align-items:center;}
-.rlabel{font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--brn);opacity:.5;align-self:flex-start;}
-
-/* ── XHS CARD 540×720 (= 900×1200 @ 0.6x) ── */
+/* ── XHS CARD 540×720 ── */
 .cwrap{position:relative;}
-.xcard{width:540px;height:720px;position:relative;overflow:hidden;flex-shrink:0;box-shadow:0 8px 40px rgba(30,18,8,.2);}
-.dlbtn{position:absolute;top:8px;right:8px;background:var(--esp);color:var(--gpal);border:none;border-radius:20px;font-size:9px;letter-spacing:.1em;padding:5px 11px;cursor:pointer;font-family:'DM Sans',sans-serif;opacity:0;transition:opacity .2s;z-index:100;}
+.xcard{width:540px;height:720px;position:relative;overflow:hidden;flex-shrink:0;box-shadow:0 8px 40px rgba(30,18,8,.2); background:white;}
+.dlbtn{position:absolute;top:8px;right:8px;background:var(--esp);color:var(--gpal);border:none;border-radius:20px;font-size:11px;letter-spacing:.1em;padding:6px 14px;cursor:pointer;font-family:'DM Sans',sans-serif;opacity:0;transition:all .2s;z-index:200; box-shadow: 0 4px 12px rgba(0,0,0,0.2);}
 .cwrap:hover .dlbtn{opacity:1;}
-.dlbtn:hover{background:var(--ink);}
+.dlbtn:hover{background:var(--ink); transform:translateY(-1px);}
 
 /* ── COVER INTERNALS ── */
-/* Scene zone — 58% height */
 .cv-scene{position:absolute;top:0;left:0;width:100%;height:58%;overflow:hidden;z-index:1;}
-.cv-scene img{width:100%;height:100%;object-fit:cover;object-position:center 20%;filter:saturate(.9) contrast(1.04);}
-
-/* Torn paper edge */
-.cv-torn{
-  position:absolute;bottom:-1px;left:0;width:100%;height:28px;z-index:3;
-}
-
-/* Brand on scene */
+.cv-scene img{width:100%;height:100%;object-fit:cover;object-position:center 20%;}
+.cv-torn{position:absolute;bottom:-1px;left:0;width:100%;height:28px;z-index:3;}
 .cv-bover{position:absolute;top:16px;left:18px;z-index:10;}
-.cv-bname{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:300;line-height:.88;color:white;text-shadow:0 2px 18px rgba(0,0,0,.3);letter-spacing:.02em;}
-.cv-bsub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:10px;font-weight:300;color:rgba(255,255,255,.65);margin-top:5px;letter-spacing:.06em;}
+.cv-bname{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:300;line-height:.88;color:white;text-shadow:0 2px 18px rgba(0,0,0,.3);}
+.cv-bsub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:10px;font-weight:300;color:rgba(255,255,255,.8);margin-top:5px;}
 
-/* Top-right tag */
-.cv-tr{position:absolute;top:16px;right:18px;z-index:10;text-align:right;}
-.cv-trl{font-size:7px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.45);}
-.cv-trs{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:10px;color:rgba(255,255,255,.7);margin-top:3px;}
+/* ── 自由画布区域 (Interactive Canvas) ── */
+.canvas-board{position:absolute;left:0;right:0;top:380px;height:240px;z-index:6;pointer-events:none;} /* pointer-events none 让底部可以被点到 */
+.canvas-item{position:absolute; background:white; box-shadow:0 6px 20px rgba(0,0,0,.1); display:flex; align-items:center; justify-content:center; padding:10px; pointer-events:auto; touch-action:none; user-select:none;}
+.canvas-item img{width:100%; height:100%; object-fit:contain; pointer-events:none;}
+.canvas-item.active{outline: 1.5px solid var(--gold); box-shadow:0 12px 30px rgba(0,0,0,.15);}
+.resize-handle{position:absolute; right:-5px; bottom:-5px; width:14px; height:14px; background:var(--gold); border:2px solid white; border-radius:50%; cursor:nwse-resize; display:none; z-index:10;}
+.canvas-item.active .resize-handle{display:block;}
 
-/* Swatch column on scene right edge */
-.cv-swcol{position:absolute;top:0;right:0;width:18px;height:58%;z-index:8;display:flex;flex-direction:column;}
-.cv-sw{flex:1;}
-
-/* Mid floating products — overlap torn edge */
-.cv-mid{position:absolute;left:0;right:0;z-index:6;display:flex;align-items:flex-end;}
-
-/* Each floating product card */
-.cv-fp{background:white;overflow:hidden;flex-shrink:0;box-shadow:0 3px 16px rgba(30,18,8,.14);}
-.cv-fp img{width:100%;height:100%;object-fit:contain;padding:10px;}
-
-/* Texture fill block */
-.cv-txfill{flex:1;position:relative;align-self:flex-end;}
-.cv-txlbl{position:absolute;bottom:7px;left:8px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:8px;color:rgba(60,30,10,.4);letter-spacing:.07em;}
-
-/* Separator */
-.cv-sep{position:absolute;left:0;right:0;height:1px;z-index:7;}
-
-/* Palette row */
+/* ── 色卡与底部信息 ── */
 .cv-palrow{position:absolute;left:16px;z-index:12;display:flex;gap:5px;align-items:center;}
-.cv-pdot{width:14px;height:14px;border-radius:50%;}
-.cv-plbl{font-size:7px;letter-spacing:.14em;text-transform:uppercase;margin-left:4px;font-family:'DM Sans',sans-serif;}
+.cv-pdot{width:14px;height:14px;border-radius:50%; box-shadow:0 2px 4px rgba(0,0,0,0.1);}
+.cv-mat-render{position:absolute; right:16px; display:flex; gap:6px; z-index:12;}
+.cv-mat-render img{width:28px; height:28px; border-radius:50%; border:1px solid white; box-shadow:0 2px 6px rgba(0,0,0,0.15); object-fit:cover;}
 
-/* Watermark word */
-.cv-wm{position:absolute;left:10px;z-index:4;font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;white-space:nowrap;letter-spacing:-.02em;line-height:1;pointer-events:none;}
-
-/* Scrap note */
-.cv-note{position:absolute;z-index:15;background:#F5EEE3;display:flex;align-items:center;justify-content:center;text-align:center;clip-path:polygon(1% 0,99% 2%,100% 98%,2% 100%);}
-.cv-note p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:8px;color:rgba(60,35,15,.6);line-height:1.6;}
-
-/* Style pill */
-.cv-pill{position:absolute;z-index:16;font-size:7px;letter-spacing:.14em;text-transform:uppercase;padding:4px 10px;border-radius:20px;font-family:'DM Sans',sans-serif;}
-
-/* Bottom strip — 34% height */
-.cv-bot{position:absolute;bottom:0;left:0;right:0;z-index:3;display:flex;}
+.cv-bot{position:absolute;bottom:0;left:0;right:0;z-index:3;display:flex;height:34%;}
 .cv-botl{width:130px;flex-shrink:0;border-right:0.5px solid rgba(90,60,30,.14);padding:13px 11px;display:flex;flex-direction:column;justify-content:space-between;}
-.cv-botbrand{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:300;line-height:1.0;color:var(--ink);letter-spacing:.03em;}
-.cv-botsub{font-size:7px;letter-spacing:.2em;text-transform:uppercase;color:var(--brn);margin-top:3px;}
-.cv-kws{display:flex;flex-direction:column;gap:5px;margin-top:auto;}
-.cv-kw-cn{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:9px;color:rgba(60,35,15,.6);}
-.cv-kw-en{font-size:7px;letter-spacing:.12em;text-transform:uppercase;color:rgba(60,35,15,.25);}
-.cv-matline{font-size:6.5px;letter-spacing:.07em;color:rgba(60,35,15,.2);line-height:1.6;margin-top:auto;}
 .cv-minis{flex:1;display:flex;}
 .cv-mini{flex:1;border-left:0.5px solid rgba(90,60,30,.1);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:5px 3px;position:relative;}
 .cv-mini img{width:100%;height:58px;object-fit:contain;padding:2px;}
-.cv-mnum{position:absolute;top:4px;left:5px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:7.5px;color:rgba(60,35,15,.22);}
-.cv-mname{font-size:6px;letter-spacing:.07em;text-transform:uppercase;color:rgba(60,35,15,.4);text-align:center;margin-top:3px;line-height:1.3;}
-.cv-mcn{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:7.5px;color:rgba(60,35,15,.5);text-align:center;margin-top:1px;}
-
-/* ── PRODUCT PAGE ── */
-.pp{display:flex;flex-direction:column;width:100%;height:100%;}
-.pphd{height:32px;flex-shrink:0;border-bottom:0.5px solid rgba(90,60,30,.12);display:flex;align-items:center;justify-content:space-between;padding:0 16px;}
-.ppbrand{font-family:'Cormorant Garamond',serif;font-size:9px;font-weight:400;letter-spacing:.22em;color:var(--esp);text-transform:uppercase;}
-.ppnum{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:9px;color:var(--brn);}
-.ppimg{flex:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
-.ppimg img{max-width:72%;max-height:88%;object-fit:contain;position:relative;z-index:2;}
-.ppcat{position:absolute;top:12px;right:12px;font-size:7px;letter-spacing:.17em;text-transform:uppercase;color:var(--brn);padding:3px 9px;border:0.5px solid rgba(122,92,60,.22);border-radius:20px;background:rgba(250,247,242,.85);z-index:5;font-weight:300;}
-.ppdots{position:absolute;bottom:10px;left:12px;display:flex;gap:5px;z-index:5;}
-.ppdot{width:11px;height:11px;border-radius:50%;}
-.ppinfo{height:32%;flex-shrink:0;border-top:1.5px solid var(--esp);display:flex;}
-.ppl{width:52%;border-right:0.5px solid rgba(90,60,30,.13);padding:16px 16px 14px;display:flex;flex-direction:column;justify-content:space-between;}
-.ppcn{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;line-height:1.0;color:var(--ink);}
-.ppen{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:10px;color:var(--sand);margin-top:4px;letter-spacing:.04em;}
-.ppbtag{font-size:7px;letter-spacing:.22em;text-transform:uppercase;color:var(--brn);opacity:.55;margin-top:2px;}
-.ppdiv{width:22px;height:.8px;background:rgba(90,60,30,.22);margin:10px 0 9px;}
-.ppdesc{font-size:9px;line-height:1.75;color:var(--brn);font-weight:300;max-width:210px;}
-.ppmatl{font-size:7px;letter-spacing:.09em;color:rgba(60,35,15,.2);}
-.ppr{flex:1;padding:14px 14px 12px;display:flex;flex-direction:column;gap:10px;}
-.pprl{font-size:7px;letter-spacing:.18em;text-transform:uppercase;color:var(--brn);opacity:.55;margin-bottom:5px;padding-bottom:5px;border-bottom:0.5px solid rgba(90,60,30,.1);}
-.pptags{display:flex;flex-wrap:wrap;gap:4px;}
-.pptag{padding:3px 9px;background:rgba(90,60,30,.05);border:0.5px solid rgba(90,60,30,.12);border-radius:20px;font-size:8.5px;color:var(--esp);letter-spacing:.02em;}
-.ppquote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:10.5px;color:rgba(60,35,15,.36);line-height:1.55;border-left:1.5px solid rgba(196,163,90,.38);padding-left:9px;margin-top:auto;}
-.ppft{height:26px;flex-shrink:0;background:var(--esp);display:flex;align-items:center;justify-content:space-between;padding:0 14px;}
-.ppfb{font-family:'Cormorant Garamond',serif;font-size:9.5px;letter-spacing:.2em;color:var(--gpal);opacity:.6;}
-.ppft2{font-size:6.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(232,213,160,.35);}
-
-/* ── PROMPT OUTPUT ── */
-.pout{width:540px;background:white;border:0.5px solid var(--bd);border-radius:var(--rlg);overflow:hidden;}
-.pohd{padding:9px 14px;background:var(--cream);border-bottom:0.5px solid var(--bd);display:flex;align-items:center;justify-content:space-between;}
-.polbl{font-size:9px;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:var(--brn);}
-.potag{font-size:8px;background:rgba(196,163,90,.12);color:var(--gold);padding:2px 7px;border-radius:3px;letter-spacing:.05em;}
-.pocopy{padding:4px 11px;background:var(--esp);color:var(--gpal);border:none;border-radius:20px;font-size:9px;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:.05em;transition:all .18s;}
-.pocopy:hover{background:var(--ink);}
-.pocopy.ok{background:#2d6a4f;}
-.potext{padding:12px 14px;font-size:10.5px;line-height:1.75;color:var(--esp);white-space:pre-wrap;font-family:'DM Sans',sans-serif;max-height:190px;overflow-y:auto;}
-
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar{width:3px;}
-::-webkit-scrollbar-thumb{background:var(--sand);border-radius:2px;}
+.cv-mname{font-size:6.5px;text-transform:uppercase;color:rgba(60,35,15,.5);text-align:center;margin-top:4px;}
 
 /* empty */
 .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:220px;gap:10px;color:var(--brn);opacity:.4;}
-.empty svg{width:34px;height:34px;opacity:.4;}
-.empty p{font-size:12px;}
+.empty svg{width:34px;height:34px;}
 </style>
 </head>
 <body>
 <nav>
   <span class="nbrand">RH FACTORY</span>
-  <span class="ntag">小红书帖子生成器 · XHS Post Generator</span>
+  <span class="ntag">Professional Moodboard Generator</span>
 </nav>
 
 <div class="app">
-<!-- ════ LEFT ════ -->
 <div class="lpanel">
 
-  <!-- STEP 0: SCENE IMAGE -->
   <div class="sec">
-    <div class="shead"><div class="snum">0</div><div class="stitle">上传场景背景图</div><div class="ssub">Step1生成后传入</div></div>
+    <div class="shead"><div class="snum">0</div><div class="stitle">背景空间</div></div>
     <div class="sbody">
       <div class="scene-zone" id="sceneZone" onclick="document.getElementById('sfi').click()">
         <div class="scene-placeholder" id="scenePH">
           <svg viewBox="0 0 28 28" fill="none"><rect x="2" y="6" width="24" height="18" rx="3" stroke="currentColor" stroke-width="1.2"/><circle cx="9" cy="13" r="2" stroke="currentColor" stroke-width="1"/><path d="M2 19l6-5 5 4 4-3 9 6" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
-          <p>上传 Gemini 生成的<br>空场景背景图<br><span style="opacity:.5;font-size:9px;">没有也可先跳过，用色块替代</span></p>
+          <p>上传空间底图<br><span style="opacity:.5;font-size:9px;">推荐使用浅色空场景</span></p>
         </div>
         <img id="sceneImg" style="display:none;" alt="">
         <button class="scene-change" onclick="document.getElementById('sfi').click();event.stopPropagation()">更换图片</button>
@@ -249,681 +154,444 @@ nav{height:52px;background:rgba(240,234,224,0.96);backdrop-filter:blur(10px);bor
     </div>
   </div>
 
-  <!-- STEP 1: PRODUCTS -->
   <div class="sec">
-    <div class="shead"><div class="snum">1</div><div class="stitle">上传产品图</div><div class="ssub">点击选中/取消</div></div>
+    <div class="shead"><div class="snum">1</div><div class="stitle">家具单品入库</div></div>
     <div class="sbody">
       <div class="pzone" id="pzone" onclick="document.getElementById('pfi').click()">
-        <h3>拖拽或点击上传产品图</h3>
-        <p>JPG · PNG · 可批量 · 点击名称可编辑</p>
+        <h3>拖拽或点击上传去背图</h3>
+        <p>JPG / PNG 支持批量上传</p>
       </div>
       <input type="file" id="pfi" accept="image/*" multiple style="display:none" onchange="handleProd(event)">
-      <div class="crow" id="crow" style="display:none">
-        <span>已上传 <b id="tc">0</b> 件 · 已选 <b id="sc">0</b> 件</span>
-        <button class="selall" onclick="togAll()">全选/取消</button>
-      </div>
       <div class="pgrid" id="pg"></div>
     </div>
   </div>
 
-  <!-- STEP 2: STYLE -->
   <div class="sec">
-    <div class="shead"><div class="snum">2</div><div class="stitle">选择风格</div></div>
+    <div class="shead"><div class="snum">2</div><div class="stitle">设计语言</div></div>
     <div class="sbody">
-      <div class="scat">欧式 · European</div>
       <div class="sgrid">
-        <div class="spill on" data-s="法式清新" onclick="pickS(this)"><span class="spn">法式清新</span><span class="spe">French Contemporary</span></div>
-        <div class="spill" data-s="法式古典" onclick="pickS(this)"><span class="spn">法式古典</span><span class="spe">Classic Haussmann</span></div>
-        <div class="spill" data-s="意式优雅" onclick="pickS(this)"><span class="spn">意式优雅</span><span class="spe">Italian Elegance</span></div>
-        <div class="spill" data-s="Art Deco" onclick="pickS(this)"><span class="spn">Art Deco</span><span class="spe">Geometric Opulence</span></div>
-        <div class="spill" data-s="地中海" onclick="pickS(this)"><span class="spn">地中海</span><span class="spe">Mediterranean</span></div>
-        <div class="spill" data-s="英式绅士" onclick="pickS(this)"><span class="spn">英式绅士</span><span class="spe">British Heritage</span></div>
-      </div>
-      <div class="scat">现代 · Modern</div>
-      <div class="sgrid">
-        <div class="spill" data-s="现代极简" onclick="pickS(this)"><span class="spn">现代极简</span><span class="spe">Contemporary Minimal</span></div>
-        <div class="spill" data-s="轻奢都市" onclick="pickS(this)"><span class="spn">轻奢都市</span><span class="spe">Urban Luxury</span></div>
-        <div class="spill" data-s="工业酷感" onclick="pickS(this)"><span class="spn">工业酷感</span><span class="spe">Industrial Loft</span></div>
-        <div class="spill" data-s="高级暗黑" onclick="pickS(this)"><span class="spn">高级暗黑</span><span class="spe">Dark Moody Luxury</span></div>
-      </div>
-      <div class="scat">自然 · Natural</div>
-      <div class="sgrid">
-        <div class="spill" data-s="奶油侘寂" onclick="pickS(this)"><span class="spn">奶油侘寂</span><span class="spe">Japandi Wabi-sabi</span></div>
-        <div class="spill" data-s="北欧自然" onclick="pickS(this)"><span class="spn">北欧自然</span><span class="spe">Scandinavian Natural</span></div>
-        <div class="spill" data-s="日系禅意" onclick="pickS(this)"><span class="spn">日系禅意</span><span class="spe">Japanese Zen</span></div>
-        <div class="spill" data-s="热带度假" onclick="pickS(this)"><span class="spn">热带度假</span><span class="spe">Tropical Resort</span></div>
-        <div class="spill" data-s="美式庄园" onclick="pickS(this)"><span class="spn">美式庄园</span><span class="spe">American Country</span></div>
-        <div class="spill" data-s="波西米亚" onclick="pickS(this)"><span class="spn">波西米亚</span><span class="spe">Boho Eclectic</span></div>
+        <div class="spill on" data-s="法式清新" onclick="pickS(this)"><span class="spn">法式清新</span></div>
+        <div class="spill" data-s="意式优雅" onclick="pickS(this)"><span class="spn">意式优雅</span></div>
+        <div class="spill" data-s="奶油侘寂" onclick="pickS(this)"><span class="spn">奶油侘寂</span></div>
+        <div class="spill" data-s="现代极简" onclick="pickS(this)"><span class="spn">现代极简</span></div>
+        <div class="spill" data-s="高级暗黑" onclick="pickS(this)"><span class="spn">高级暗黑</span></div>
+        <div class="spill" data-s="波西米亚" onclick="pickS(this)"><span class="spn">波西米亚</span></div>
       </div>
     </div>
   </div>
 
-  <!-- STEP 3: SCENE SETTINGS -->
   <div class="sec">
-    <div class="shead"><div class="snum">3</div><div class="stitle">品牌 &amp; 场景</div></div>
+    <div class="shead">
+      <div class="snum" style="background:var(--sand)">★</div>
+      <div class="stitle">色彩与材质</div>
+      <div class="ssub">定制专属情绪板</div>
+    </div>
     <div class="sbody">
-      <div class="fgrid">
-        <div><label class="fl">品牌名称</label><input class="fc" type="text" id="brand" value="RH FACTORY"></div>
-        <div><label class="fl">空间类型</label><select class="fc" id="room"><option>客厅 Living Room</option><option>卧室 Bedroom</option><option>餐厅 Dining Room</option><option>书房 Study</option></select></div>
-        <div><label class="fl">墙面 <span class="atag">自动</span></label><select class="fc" id="wall"></select></div>
-        <div><label class="fl">地面 <span class="atag">自动</span></label><select class="fc" id="floor"></select></div>
-        <div><label class="fl">光线 <span class="atag">自动</span></label><select class="fc" id="light"></select></div>
-        <div><label class="fl">绿植 <span class="atag">自动</span></label><select class="fc" id="plant"></select></div>
-        <div class="ff"><label class="fl">特别要求（可选）</label><input class="fc" type="text" id="extra" placeholder="如：强调沙发颜色不变…"></div>
+      <div class="scat">主色调提取 · Color Palette</div>
+      <div style="display: flex; gap: 8px; margin-bottom: 12px;" id="dynamicPalette">
+        </div>
+      <button class="bsec" onclick="extractColorFromScene()" style="margin-bottom: 16px;">✦ 从空间图智能提取色调</button>
+
+      <div class="scat">细节材质球 · Material Swatches</div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="materialZone">
+        <div class="m-upload-btn" onclick="document.getElementById('mfi').click()">+</div>
       </div>
+      <input type="file" id="mfi" accept="image/*" multiple style="display:none" onchange="handleMaterials(event)">
     </div>
   </div>
 
-  <!-- ACTIONS -->
   <div class="btns">
-    <button class="bgen" id="genBtn" onclick="generate()">生成帖子预览 + 提示词 →</button>
-    <button class="bsec" onclick="howToExport()">如何导出900×1200 PNG ↗</button>
+    <button class="bgen" onclick="generateBoard()">生成情绪板 (支持拖拽排版) →</button>
   </div>
 
-</div><!-- /lpanel -->
+</div>
 
-<!-- ════ RIGHT ════ -->
 <div class="rpanel" id="rp">
   <div class="empty" id="emp">
     <svg viewBox="0 0 36 36" fill="none"><rect x="3" y="3" width="30" height="30" rx="4" stroke="currentColor" stroke-width="1.2"/><path d="M3 22l8-7 7 6 5-4 10 8" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
-    <p>上传产品图后点击生成</p>
+    <p>完成左侧配置后，点击生成即可自由排版</p>
   </div>
 </div>
-</div><!-- /app -->
+</div>
 
 <script>
 // ═══════════════════════════════════════════
-// STATE
+// 全局状态管理
 // ═══════════════════════════════════════════
-let prods=[], curStyle='法式清新', allSel=true, sceneSrc=null;
+let prods = []; 
+let curStyle = '法式清新';
+let sceneSrc = null;
+let currentPalette = ['#F0EAE0', '#DDD0C0', '#B0A090', '#7A6C5C', '#3A2C1C'];
+let materials = [];
+let maxZIndex = 10; // 用于管理图层置顶
 
-const SSUB={
-  '法式清新':'French Contemporary','法式古典':'Classic Haussmann',
-  '意式优雅':'Italian Elegance','Art Deco':'Geometric Opulence',
-  '地中海':'Mediterranean','英式绅士':'British Heritage',
-  '现代极简':'Contemporary Minimal','轻奢都市':'Urban Luxury',
-  '工业酷感':'Industrial Loft','高级暗黑':'Dark Moody Luxury',
-  '奶油侘寂':'Japandi Wabi-sabi','北欧自然':'Scandinavian Natural',
-  '日系禅意':'Japanese Zen','热带度假':'Tropical Resort',
-  '美式庄园':'American Country','波西米亚':'Boho Eclectic',
+const PALETTES = {
+  '法式清新': ['#F0EAE0','#DDD0C0','#B0A090','#7A6C5C','#3A2C1C'],
+  '意式优雅': ['#EDE0D0','#C8A880','#8A6840','#4A3828','#281808'],
+  '奶油侘寂': ['#F2EDE5','#D8CABC','#B4A090','#7A6050','#3C2818'],
+  '现代极简': ['#F8F8F6','#E8E8E4','#B0B0A8','#606058','#202018'],
+  '高级暗黑': ['#282420','#3A3430','#685850','#9A8878','#1A0E08'],
+  '波西米亚': ['#F0E8D8','#D0A880','#905038','#481808','#200804']
 };
-
-// Style-specific palettes [cream,light,mid,accent,dark,pop]
-const PAL={
-  '法式清新': ['#F0EAE0','#DDD0C0','#B0A090','#7A6C5C','#3A2C1C','#5A8060'],
-  '法式古典': ['#EEE4D0','#D4B880','#8A6030','#4A2810','#1A0808','#C4A35A'],
-  '意式优雅': ['#EDE0D0','#C8A880','#8A6840','#4A3828','#281808','#3A5040'],
-  'Art Deco':  ['#EEE8E0','#D0C0A0','#8A7850','#2A2010','#0A0808','#C4A020'],
-  '地中海':   ['#F0EEE8','#C8D8E8','#7090A8','#304858','#101828','#E8C870'],
-  '英式绅士': ['#EAE4D8','#C0AE90','#6A5838','#3A2818','#180E04','#4A6840'],
-  '现代极简': ['#F8F8F6','#E8E8E4','#B0B0A8','#606058','#202018','#384858'],
-  '轻奢都市': ['#E8E0D8','#C0AE98','#786050','#38281A','#100808','#C4A020'],
-  '工业酷感': ['#E0D8D0','#B0A090','#706050','#302818','#100C04','#A87840'],
-  '高级暗黑': ['#282420','#3A3430','#685850','#9A8878','#1A0E08','#C88040'],
-  '奶油侘寂': ['#F2EDE5','#D8CABC','#B4A090','#7A6050','#3C2818','#4A5840'],
-  '北欧自然': ['#F4F2EC','#D8D4C8','#A8A49A','#686460','#282420','#607060'],
-  '日系禅意': ['#EEEAE4','#C8C0B0','#88807A','#484440','#181410','#5A7060'],
-  '热带度假': ['#F0EEE4','#D0C8A8','#888070','#3A3020','#10100A','#4A8060'],
-  '美式庄园': ['#EEE8DC','#D0C0A0','#90806A','#4A3828','#181008','#8A6040'],
-  '波西米亚': ['#F0E8D8','#D0A880','#905038','#481808','#200804','#A87030'],
-};
-
-function pal(s){return PAL[s]||PAL['法式清新'];}
-
-const SCENE={
-  '法式清新':{wall:['纯白法式护墙板 — white plaster panel molding','米白石膏 — warm ivory smooth plaster','奶白拱形门廊 — white arched doorway'],floor:['人字拼浅金橡木 — pale oak herringbone parquet','浅色石灰石 — light limestone tiles'],light:['巴黎清晨日光 — crisp cool Parisian morning light','柔和散射午后光 — soft diffused afternoon light'],plant:['纤细橄榄树（陶土盆） — slender olive tree terracotta','尤加利枝白陶瓶 — eucalyptus white ceramic vase']},
-  '意式优雅':{wall:['磨砂洞石灰华墙 — matte travertine textured plaster','古旧威尼斯灰泥 — aged Venetian plaster warm sand'],floor:['意式水磨石 — classic Italian terrazzo floor','米白卡拉拉大理石 — white Carrara marble'],light:['琥珀烛光暖调 — amber candlelight warm','黄铜壁灯侧投 — brass wall sconce side light'],plant:['无花果树（赤陶盆） — fiddle leaf fig terracotta','弯曲枯枝配白花 — sculptural dried branches']},
-  '法式古典':{wall:['奶白精雕石膏线腰线墙 — cream walls elaborate plaster cornice','象牙白护墙板配镀金线 — ivory wainscoting gilded trim'],floor:['蜂蜜橡木人字拼 — warm honey oak chevron parquet','深色核桃木宽板 — dark walnut wide-plank floor'],light:['壁炉暖火金色映光 — warm golden fireplace glow','水晶吊灯散射暖光 — soft warm crystal chandelier'],plant:['大型盆栽棕榈（镀金盆） — large potted palm gilt','古典花艺银质花瓶 — classical floral silver vase']},
-  '轻奢都市':{wall:['抛光深灰混凝土 — polished dark grey concrete','深炭哑光灰泥 — matte charcoal plaster wall'],floor:['深灰抛光混凝土 — dark grey polished concrete','深色烟熏橡木 — dark smoked oak wide-plank'],light:['戏剧单侧聚光 — dramatic single-side spotlight','城市夜景映入 — urban night cityscape glow'],plant:['高细枝干枯木雕塑 — tall sculptural driftwood','单枝黑瓶白花 — single white flower matte black vase']},
-  '奶油侘寂':{wall:['温白粗糙灰泥（可见手抹纹理） — warm white rough plaster hand-applied','未处理生石灰墙 — raw lime wash wall organic texture'],floor:['浅色做旧实木 — pale aged solid wood floor','哑光米白陶土砖 — matte ivory clay tile'],light:['清晨柔和侧光 — soft gentle morning side light','阴天漫散射自然光 — overcast diffused natural light'],plant:['单枝枯树枝（粗陶瓶） — single dry branch rough ceramic','苔藓+小鹅卵石 — moss and pebble composition']},
-  '现代极简':{wall:['纯白光滑无纹墙 — pure smooth white wall zero decoration','浅灰白大板混凝土 — light grey-white concrete panel'],floor:['浅白蜡木宽板 — pale ash wide-plank floor','浅灰大板瓷砖 — light grey large-format porcelain'],light:['冷白均匀散射光 — cool white even diffused light','线性LED洗墙光 — linear LED wall-wash strip'],plant:['无绿植 — absolutely no plants keep it pure','单枝极简插花（细玻璃瓶） — single stem ultra-thin glass vase']},
-};
-const DSCENE=SCENE['法式清新'];
-['Art Deco','地中海','英式绅士','工业酷感','高级暗黑','北欧自然','日系禅意','热带度假','美式庄园','波西米亚'].forEach(s=>{if(!SCENE[s])SCENE[s]=DSCENE;});
-
-const GUIDE={
-  '法式清新':'Modern French / Parisian — bright airy white panel molding walls, herringbone pale limestone floors, sheer linen curtains, crisp cool daylight from tall arched windows',
-  '意式优雅':'Italian Elegance — polished travertine or aged plaster walls, terrazzo or marble floors, curved architectural arches, warm amber candlelight, brushed brass, palazzo in Milan or Florence',
-  '法式古典':'Classic Haussmann French — formal cream walls with elaborate plaster cornice moldings, chevron parquet warm honey oak, heavy silk drapes, gilded mirror above fireplace, crystal chandelier',
-  '轻奢都市':'Urban Luxury — polished dark concrete or matte charcoal plaster walls, black steel window frames, brass and black metal accents, moody dramatic lighting, luxury penthouse New York or Hong Kong',
-  '奶油侘寂':'Japandi Wabi-sabi — warm white rough plaster with visible hand-applied texture, raw linen and undyed cotton, pale aged wood, imperfect hand-thrown ceramics, quiet and deeply contemplative',
-  '现代极简':'Contemporary Minimal — pure smooth white walls zero decoration, wide-plank pale ash floor, absolute silence, only furniture speaks, like a gallery installation, silent luxury',
-  'Art Deco':'Art Deco Revival — bold geometric wall paneling, mirrored surfaces black lacquer trim, rich jewel-tone accents emerald sapphire burgundy, gold metalwork sunburst motifs, glamorous theatrical',
-  '地中海':'Mediterranean Coast — whitewashed plaster arched walls, terracotta tile or pale stone floor, warm dappled sunlight, blue-white pottery accents, linen and rattan textures, Santorini villa',
-  '英式绅士':'British Heritage — dark oak paneled or deep forest green walls, Persian rug, brass reading lamp, framed botanical prints, warm fireplace glow, English country house meets London club',
-  '工业酷感':'Industrial Loft — raw exposed brick or bare concrete walls, dark iron ceiling, worn oak plank floor, Edison bulb pendants, matte black metal frames, masculine edgy Brooklyn loft',
-  '高级暗黑':'Dark Moody Luxury — deep charcoal midnight navy or rich burgundy walls, dramatic low ambient lighting precise spotlights, smoked glass and black marble, mysterious high-end private members club',
-  '北欧自然':'Scandinavian Natural — crisp white birch-toned walls, light ash wood, natural fiber jute or wool rugs, functional beauty zero excess, lots of diffused natural light, calm and deeply livable',
-  '日系禅意':'Japanese Zen — sand-colored shoji screen or smooth clay walls, polished concrete or stone floors, very low furniture, moss or bonsai, single ikebana, absolute stillness and breathing space',
-  '热带度假':'Tropical Resort — whitewashed walls open to tropical air, teak and wicker, large banana leaf or monstera plants, natural rattan shades warm light, luxury Bali or Maldives villa atmosphere',
-  '美式庄园':'American Country — warm white or cream shiplap wall paneling, wide-plank pine floor, rustic reclaimed wood beams, cotton and dried flower arrangements, relaxed welcoming southern estate',
-  '波西米亚':'Boho Eclectic — layered global textiles, macramé wall hangings, mixed vintage rugs, abundant trailing plants and dried pampas grass, warm terracotta and saffron accents, free-spirited eclectic',
-};
-
-// Style-specific keywords for bottom strip
-const KWS={
-  '法式清新':[{cn:'柔白肌理',en:'soft white texture'},{cn:'清晨漫光',en:'morning light'},{cn:'利落优雅',en:'clean elegance'}],
-  '意式优雅':[{cn:'暖棕绒面',en:'warm velvet'},{cn:'大理石纹',en:'marble grain'},{cn:'古铜细节',en:'bronze detail'}],
-  '法式古典':[{cn:'镀金线条',en:'gilded lines'},{cn:'水晶烛光',en:'crystal glow'},{cn:'古典华贵',en:'classic opulence'}],
-  '轻奢都市':[{cn:'深炭对比',en:'charcoal contrast'},{cn:'戏剧灯光',en:'dramatic light'},{cn:'都市冷感',en:'urban cool'}],
-  '奶油侘寂':[{cn:'原土肌理',en:'raw earth texture'},{cn:'侘寂留白',en:'wabi-sabi space'},{cn:'自然本色',en:'natural tone'}],
-  '现代极简':[{cn:'极致留白',en:'pure negative space'},{cn:'无声奢华',en:'silent luxury'},{cn:'光线雕塑',en:'light sculpture'}],
-};
-function getKws(s){return KWS[s]||[{cn:'温暖质感',en:'warm texture'},{cn:'精致细节',en:'refined detail'},{cn:'高级氛围',en:'luxury mood'}];}
-
-const MATLINES={
-  '法式清新':'Linen · Marble · Brass · Plaster',
-  '意式优雅':'Velvet · Travertine · Bronze · Silk',
-  '法式古典':'Silk · Crystal · Gilded Wood · Velvet',
-  '轻奢都市':'Concrete · Black Steel · Smoked Glass',
-  '奶油侘寂':'Raw Cotton · Ceramic · Aged Oak · Stone',
-  '现代极简':'White Plaster · Ash Wood · Frosted Glass',
-};
-function getMat(s){return MATLINES[s]||'Velvet · Marble · Metal · Brass';}
-
-const MOTTOS={
-  '法式清新':'light &<br>grace','意式优雅':'stone &<br>warmth','法式古典':'gilt &<br>opulence',
-  '轻奢都市':'edge &<br>glow','奶油侘寂':'quiet &<br>wabi','现代极简':'less &<br>silence',
-  '高级暗黑':'dark &<br>desire','北欧自然':'pure &<br>light','日系禅意':'zen &<br>breath',
-};
-function getMotto(s){return MOTTOS[s]||'warm &<br>refined';}
-
-// Material tags per product type × style combo
-function getTags(type,style){
-  const base={
-    '沙发':['绒面包裹','模块设计','低剖面','深坐感'],
-    '茶几':['天然大理石','手打铁艺','黄铜嵌条','低矮比例'],
-    '边几':['手锻铁艺','锤痕肌理','极简几何','方形底座'],
-    '落地灯':['精制黄铜','可调节臂','防眩光','线性美感'],
-    '吊灯':['天然石膏','金属框架','半透光','环形结构'],
-    '单人椅':['宽阔扶手','方正轮廓','高密度填充','低底座'],
-    '地毯':['手工编织','天然纤维','低绒面','不规则边'],
-    '挂画':['手工装裱','艺术原作','大尺幅','视觉焦点'],
-  };
-  const tags=(base[type]||['优质材料','精工细作','设计感强','品质保证']).slice(0,3);
-  tags.push(style);
-  return tags;
-}
-
-function getDesc(name,type,style){
-  const d={
-    '沙发':`利落几何轮廓，优质绒面包裹，${style}风格的沉稳定义。模块化设计，毛绒座垫深度放松体验。`,
-    '茶几':`天然大理石桌面与手打铁艺腿架的刚柔碰撞，${style}空间的视觉焦点，天然奢华与巧思的完美结晶。`,
-    '边几':`精选铁材手工锻打，纤细腿架留有自然锤痕。极简几何线条，以大拙大美的姿态点缀${style}空间。`,
-    '落地灯':`纤细黄铜轮廓，可调节弯臂，精准防眩光下射。工业精密与极简美学的巅峰结合，于${style}中散发工匠气质。`,
-    '吊灯':`精选天然石膏片，金属铆钉环形框架固定。半透明质感将光线过滤得温润如玉，为${style}空间营造沉静氛围。`,
-    '单人椅':`宽阔方正扶手，丰盈填充物将利落轮廓柔化。棕褐色高性能布料，${style}空间的静谧定义者。`,
-    '地毯':`手工编织天然纤维，低绒面肌理富有层次感。为${style}空间铺设温暖质感的基底。`,
-    '挂画':`大尺幅艺术作品，视觉冲击力强。为${style}空间提供情绪锚点，引领空间叙事。`,
-  };
-  return d[type]||`以精湛工艺与考究材质，为${style}风格空间注入高级美学语言，以沉稳姿态定义居室品味。`;
-}
-
-function getQuote(style){
-  const q={
-    '法式清新':'"以柔和的光与利落的线，定义巴黎式的日常优雅。"',
-    '意式优雅':'"天然奢华与艺术巧思的完美结晶，以迷人姿态定义空间。"',
-    '法式古典':'"历史的重量，以镀金线条轻轻托起当代的精致生活。"',
-    '轻奢都市':'"于都市的戏剧性张力中，寻找静谧的高级感。"',
-    '奶油侘寂':'"美在不完美，静在留白处——侘寂美学的日常栖居。"',
-    '现代极简':'"减去所有多余，只留空间本质的呼吸与光。"',
-  };
-  return q[style]||'"以精湛工艺与考究材质，为空间注入高级美学语言，以沉稳姿态定义居室品味。"';
-}
 
 // ═══════════════════════════════════════════
-// SCENE IMAGE
+// UI 交互与数据绑定
 // ═══════════════════════════════════════════
+
+// 1. 场景上传
 function loadScene(e){
-  const f=e.target.files[0]; if(!f) return;
-  const r=new FileReader();
-  r.onload=ev=>{
-    sceneSrc=ev.target.result;
-    const img=document.getElementById('sceneImg');
-    img.src=sceneSrc; img.style.display='block';
-    document.getElementById('scenePH').style.display='none';
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    sceneSrc = ev.target.result;
+    document.getElementById('sceneImg').src = sceneSrc;
+    document.getElementById('sceneImg').style.display = 'block';
+    document.getElementById('scenePH').style.display = 'none';
     document.getElementById('sceneZone').classList.add('has-img');
   };
   r.readAsDataURL(f);
-  e.target.value='';
+  e.target.value = '';
 }
 
-// ═══════════════════════════════════════════
-// PRODUCTS
-// ═══════════════════════════════════════════
-const TYPES=['沙发','茶几','边几','单人椅','落地灯','吊灯','挂画','地毯','储物柜','花瓶','装饰品','镜子'];
-
-const pzone=document.getElementById('pzone');
-pzone.addEventListener('dragover',e=>{e.preventDefault();pzone.classList.add('over');});
-pzone.addEventListener('dragleave',()=>pzone.classList.remove('over'));
-pzone.addEventListener('drop',e=>{e.preventDefault();pzone.classList.remove('over');addFiles(Array.from(e.dataTransfer.files).filter(f=>f.type.startsWith('image/')));});
-
-function handleProd(e){addFiles(Array.from(e.target.files));e.target.value='';}
-
-function addFiles(files){
-  files.forEach((f,i)=>{
-    const r=new FileReader();
-    r.onload=ev=>{
-      const nm=f.name.replace(/\.[^.]+$/,'').replace(/[-_]/g,' ');
-      prods.push({id:Date.now()+i+Math.random(),name:nm,type:TYPES[prods.length%TYPES.length],src:ev.target.result,sel:true});
+// 2. 产品上传
+function handleProd(e){
+  Array.from(e.target.files).forEach((f, i) => {
+    const r = new FileReader();
+    r.onload = ev => {
+      // 赋予初始空间属性，错开排列
+      const offsetX = (prods.length % 3) * 60;
+      const offsetY = Math.floor(prods.length / 3) * 30;
+      prods.push({
+        id: 'prod_' + Date.now() + i,
+        name: f.name.replace(/\.[^.]+$/,''),
+        src: ev.target.result,
+        sel: true,
+        x: 20 + offsetX, 
+        y: 10 + offsetY, 
+        w: 140, // 初始宽度
+        z: maxZIndex++
+      });
       renderPG();
     };
     r.readAsDataURL(f);
   });
+  e.target.value = '';
 }
 
 function renderPG(){
-  const pg=document.getElementById('pg');
-  const tot=prods.length, sel=prods.filter(p=>p.sel).length;
-  document.getElementById('crow').style.display=tot?'flex':'none';
-  document.getElementById('tc').textContent=tot;
-  document.getElementById('sc').textContent=sel;
-  pg.innerHTML='';
-  document.getElementById('emp').style.display='none';
-  prods.forEach(p=>{
-    const d=document.createElement('div');
-    d.className='pcard'+(p.sel?' sel':'');
-    d.innerHTML=`
-      <button class="pdel" onclick="delP('${p.id}',event)">×</button>
-      <div class="pchk"><svg viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2L7 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  const pg = document.getElementById('pg');
+  pg.innerHTML = '';
+  prods.forEach(p => {
+    if(!p.sel) return;
+    const d = document.createElement('div');
+    d.className = 'pcard sel';
+    d.innerHTML = `
+      <button class="pdel" onclick="delP('${p.id}', event)">×</button>
       <img src="${p.src}" alt="">
-      <input class="pname" type="text" value="${p.name}" onclick="event.stopPropagation()" onchange="updName('${p.id}',this.value)" placeholder="名称">
-      <input class="ptype" type="text" value="${p.type}" onclick="event.stopPropagation()" onchange="updType('${p.id}',this.value)" placeholder="类型">
+      <div style="font-size:8px;text-align:center;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px;">${p.name}</div>
     `;
-    d.addEventListener('click',()=>{p.sel=!p.sel;renderPG();});
     pg.appendChild(d);
   });
 }
+function delP(id, e){ e.stopPropagation(); prods = prods.filter(p => p.id != id); renderPG(); }
 
-function delP(id,e){e.stopPropagation();prods=prods.filter(p=>p.id!=id);renderPG();}
-function updName(id,v){const p=prods.find(x=>x.id==id);if(p)p.name=v;}
-function updType(id,v){const p=prods.find(x=>x.id==id);if(p)p.type=v;}
-function togAll(){allSel=!allSel;prods.forEach(p=>p.sel=allSel);renderPG();}
-
-// ═══════════════════════════════════════════
-// STYLE
-// ═══════════════════════════════════════════
+// 3. 风格选择
 function pickS(el){
-  document.querySelectorAll('.spill').forEach(s=>s.classList.remove('on'));
-  el.classList.add('on'); curStyle=el.dataset.s;
-  fillScene(curStyle);
+  document.querySelectorAll('.spill').forEach(s => s.classList.remove('on'));
+  el.classList.add('on'); 
+  curStyle = el.dataset.s;
+  // 切换风格时同步更新色盘
+  currentPalette = [...(PALETTES[curStyle] || PALETTES['法式清新'])];
+  renderPaletteUI();
 }
 
-function fillScene(s){
-  const cfg=SCENE[s]||DSCENE;
-  const map={wall:cfg.wall,floor:cfg.floor,light:cfg.light,plant:cfg.plant};
-  [['wall',cfg.wall],['floor',cfg.floor],['light',cfg.light],['plant',cfg.plant]].forEach(([id,opts])=>{
-    const sel=document.getElementById(id); if(!sel||!opts)return;
-    sel.innerHTML=opts.map((o,i)=>`<option value="${o}">${o.split(' — ')[0]}${i===0?' ★':''}</option>`).join('');
+// 4. 色彩与材质
+function renderPaletteUI() {
+  const container = document.getElementById('dynamicPalette');
+  container.innerHTML = '';
+  currentPalette.forEach((color, i) => {
+    const inp = document.createElement('input');
+    inp.type = 'color';
+    inp.className = 'color-input';
+    inp.value = color;
+    inp.oninput = (e) => {
+      currentPalette[i] = e.target.value;
+      updateBoardColorsLive(); // 实时反馈到画面
+    };
+    container.appendChild(inp);
   });
 }
+renderPaletteUI(); // Init
 
-// ═══════════════════════════════════════════
-// GENERATE
-// ═══════════════════════════════════════════
-function generate(){
-  const sel=prods.filter(p=>p.sel);
-  if(!sel.length){alert('请先上传并选择产品图片');return;}
-  const rp=document.getElementById('rp');
-  rp.innerHTML='';
+function updateBoardColorsLive() {
+  const board = document.getElementById('renderedBoard');
+  if(!board) return;
+  // 更新背景色、调色盘圆点等
+  board.style.backgroundColor = currentPalette[0];
+  const dots = board.querySelectorAll('.cv-pdot');
+  dots.forEach((dot, idx) => { if(currentPalette[idx]) dot.style.backgroundColor = currentPalette[idx]; });
+}
 
-  // Cover
-  addLbl(rp,'封面 · Cover — 900×1200 (3:4)');
-  const cw=mWrap(); cw.appendChild(mkCover(sel)); addDL(cw,'rh-cover.png'); rp.appendChild(cw);
-
-  // Product pages
-  addLbl(rp,'单品详情页 · Product Pages — 900×1200 (3:4)');
-  sel.forEach((p,i)=>{
-    const w=mWrap(); w.appendChild(mkPP(p,i,sel.length)); addDL(w,`rh-prod-${i+1}.png`); rp.appendChild(w);
+function handleMaterials(e) {
+  Array.from(e.target.files).forEach(f => {
+    const r = new FileReader();
+    r.onload = ev => {
+      materials.push(ev.target.result);
+      renderMaterialsUI();
+    };
+    r.readAsDataURL(f);
   });
-
-  // Prompts
-  addLbl(rp,'三段提示词 · AI 操作提示词');
-  buildPts(sel,rp);
+  e.target.value = '';
 }
 
-function addLbl(parent,t){const l=document.createElement('div');l.className='rlabel';l.textContent=t;parent.appendChild(l);}
-function mWrap(){const w=document.createElement('div');w.className='cwrap';return w;}
-function addDL(wrap,name){
-  const b=document.createElement('button');b.className='dlbtn';b.textContent='导出说明 ↗';
-  b.onclick=howToExport; wrap.appendChild(b);
+function renderMaterialsUI() {
+  const zone = document.getElementById('materialZone');
+  Array.from(zone.children).forEach(c => { if(!c.classList.contains('m-upload-btn')) c.remove(); });
+  materials.forEach((src, i) => {
+    const d = document.createElement('div');
+    d.className = 'mat-preview';
+    d.innerHTML = `<img src="${src}"><button onclick="delMat(${i})">×</button>`;
+    zone.insertBefore(d, zone.lastElementChild);
+  });
+}
+function delMat(i) { materials.splice(i, 1); renderMaterialsUI(); }
+
+// 简易主色提取算法 (采样中心点周围颜色)
+function extractColorFromScene() {
+  if(!sceneSrc) { alert('请先上传背景空间图'); return; }
+  const img = new Image();
+  img.onload = () => {
+    const cvs = document.createElement('canvas');
+    const ctx = cvs.getContext('2d');
+    cvs.width = img.width; cvs.height = img.height;
+    ctx.drawImage(img, 0, 0);
+    // 简单采样：画面正中、四角
+    const points = [
+      {x: img.width/2, y: img.height/2},
+      {x: img.width*0.2, y: img.height*0.8},
+      {x: img.width*0.8, y: img.height*0.8},
+      {x: img.width*0.5, y: img.height*0.2},
+      {x: img.width*0.8, y: img.height*0.2}
+    ];
+    points.forEach((p, idx) => {
+      if(idx >= 5) return;
+      const data = ctx.getImageData(p.x, p.y, 1, 1).data;
+      const hex = "#" + ((1 << 24) + (data[0] << 16) + (data[1] << 8) + data[2]).toString(16).slice(1);
+      currentPalette[idx] = hex;
+    });
+    renderPaletteUI();
+  };
+  img.src = sceneSrc;
 }
 
 // ═══════════════════════════════════════════
-// COVER CARD
+// 生成画布与拖拽逻辑 (核心)
 // ═══════════════════════════════════════════
-function mkCover(sel){
-  const brand=document.getElementById('brand').value||'RH FACTORY';
-  const p=pal(curStyle);
-  const card=mkEl('div'); card.className='xcard'; card.style.background=p[0];
+function generateBoard(){
+  if(prods.length === 0){ alert('请上传至少一件家具单品'); return; }
+  
+  const rp = document.getElementById('rp');
+  rp.innerHTML = ''; // 清空右侧
 
-  // ── Scene top 58% ──
-  const scene=mkEl('div'); scene.className='cv-scene';
-  if(sceneSrc){
-    const img=document.createElement('img'); img.src=sceneSrc; scene.appendChild(img);
+  // 外层包裹与导出按钮
+  const wrap = document.createElement('div');
+  wrap.className = 'cwrap';
+  const dlBtn = document.createElement('button');
+  dlBtn.className = 'dlbtn';
+  dlBtn.innerHTML = '⬇ 一键导出 PNG';
+  dlBtn.onclick = () => exportToImage(wrap);
+  wrap.appendChild(dlBtn);
+
+  // 构建核心卡片
+  const card = document.createElement('div');
+  card.className = 'xcard';
+  card.id = 'renderedBoard';
+  card.style.backgroundColor = currentPalette[0]; // 提取的主色作为底色
+
+  // 1. 上半部分场景
+  const scene = document.createElement('div');
+  scene.className = 'cv-scene';
+  if(sceneSrc) {
+    scene.innerHTML = `<img src="${sceneSrc}">`;
   } else {
-    // Fallback: gradient using palette + first product if available
-    const bg=sceneSrc||(sel[0]?sel[0].src:null);
-    if(bg&&!sceneSrc){
-      // Use first product image as scene fill with heavy overlay
-      const img=document.createElement('img');
-      img.src=bg;
-      img.style.cssText='width:100%;height:100%;object-fit:cover;filter:blur(2px) saturate(0.5) brightness(1.1);';
-      scene.appendChild(img);
-      const ov=mkEl('div');
-      ov.style.cssText=`position:absolute;inset:0;background:linear-gradient(160deg,${p[1]}CC 0%,${p[0]}99 60%,${p[2]}88 100%);`;
-      scene.appendChild(ov);
-    } else {
-      // Pure gradient fallback
-      scene.style.background=`linear-gradient(158deg,${p[1]} 0%,${p[0]} 55%,${p[2]} 100%)`;
-      const tx=mkEl('div');
-      tx.style.cssText=`position:absolute;inset:0;opacity:0.1;background-image:repeating-linear-gradient(135deg,${p[3]} 0,${p[3]} 1px,transparent 1px,transparent 8px);`;
-      scene.appendChild(tx);
-    }
+    scene.style.background = `linear-gradient(158deg, ${currentPalette[1]} 0%, ${currentPalette[0]} 100%)`;
   }
-
-  // Torn edge
-  const torn=mkEl('div'); torn.className='cv-torn';
-  torn.innerHTML=`<svg width="540" height="28" viewBox="0 0 540 28" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><path d="M0,28 L0,14 C5,8 10,18 15,10 C20,2 25,16 30,8 C35,1 40,15 45,7 C50,0 55,14 60,8 C65,2 70,16 75,9 C80,2 85,15 90,8 C95,1 100,14 105,7 C110,0 115,14 120,8 C125,2 130,16 135,9 C140,2 145,15 150,8 C155,1 160,14 165,7 C170,1 175,15 180,8 C185,2 190,16 195,9 C200,2 205,15 210,7 C215,0 220,14 225,8 C230,2 235,16 240,9 C245,2 250,15 255,8 C260,1 265,14 270,7 C275,1 280,15 285,8 C290,2 295,16 300,9 C305,2 310,15 315,8 C320,1 325,14 330,7 C335,0 340,14 345,8 C350,2 355,16 360,9 C365,2 370,15 375,8 C380,1 385,14 390,7 C395,0 400,14 405,8 C410,2 415,16 420,9 C425,2 430,15 435,8 C440,1 445,14 450,7 C455,0 460,14 465,8 C470,2 475,16 480,9 C485,2 490,15 495,8 C500,1 505,14 510,7 C515,0 520,14 525,8 C530,2 535,15 540,9 L540,28 Z" fill="${p[0]}"/></svg>`;
+  
+  // 撕纸边缘
+  const torn = document.createElement('div'); torn.className = 'cv-torn';
+  torn.innerHTML = `<svg width="540" height="28" viewBox="0 0 540 28" preserveAspectRatio="none"><path d="M0,28 L0,14 C5,8 10,18 15,10 C20,2 25,16 30,8 C35,1 40,15 45,7 C50,0 55,14 60,8 C65,2 70,16 75,9 C80,2 85,15 90,8 C95,1 100,14 105,7 C110,0 115,14 120,8 C125,2 130,16 135,9 C140,2 145,15 150,8 C155,1 160,14 165,7 C170,1 175,15 180,8 C185,2 190,16 195,9 C200,2 205,15 210,7 C215,0 220,14 225,8 C230,2 235,16 240,9 C245,2 250,15 255,8 C260,1 265,14 270,7 C275,1 280,15 285,8 C290,2 295,16 300,9 C305,2 310,15 315,8 C320,1 325,14 330,7 C335,0 340,14 345,8 C350,2 355,16 360,9 C365,2 370,15 375,8 C380,1 385,14 390,7 C395,0 400,14 405,8 C410,2 415,16 420,9 C425,2 430,15 435,8 C440,1 445,14 450,7 C455,0 460,14 465,8 C470,2 475,16 480,9 C485,2 490,15 495,8 C500,1 505,14 510,7 C515,0 520,14 525,8 C530,2 535,15 540,9 L540,28 Z" fill="${currentPalette[0]}"/></svg>`;
   scene.appendChild(torn);
-
-  // Brand
-  const bo=mkEl('div'); bo.className='cv-bover';
-  const blines=brand.split(' ');
-  bo.innerHTML=`<div class="cv-bname">${blines.join('<br>')}</div><div class="cv-bsub">Living room option</div>`;
-  scene.appendChild(bo);
-
-  // Top right
-  const tr=mkEl('div'); tr.className='cv-tr';
-  tr.innerHTML=`<div class="cv-trl">Soft Furnishing · 2026</div><div class="cv-trs">${curStyle} · ${SSUB[curStyle]||''}</div>`;
-  scene.appendChild(tr);
-
-  // Swatch column
-  const sw=mkEl('div'); sw.className='cv-swcol';
-  p.forEach(c=>{const s=mkEl('div');s.className='cv-sw';s.style.background=c;sw.appendChild(s);});
-  scene.appendChild(sw);
+  
+  // 文字浮层
+  scene.innerHTML += `<div class="cv-bover"><div class="cv-bname">RH FACTORY</div><div class="cv-bsub">${curStyle} Moodboard</div></div>`;
   card.appendChild(scene);
 
-  // ── Mid zone: floating products overlapping torn edge ──
-  const sceneBottom=Math.round(720*0.58); // 418px
-  const midTop=sceneBottom-28+4; // just below torn edge
-  const mid=mkEl('div'); mid.className='cv-mid';
-  mid.style.cssText=`position:absolute;left:0;right:18px;top:${midTop}px;height:200px;z-index:6;display:flex;align-items:flex-end;`;
-
-  // Dynamic product placement based on count
-  const floatProds=sel.slice(0,3);
-  const configs=[
-    [{w:220,h:170,mt:30},{w:160,h:140,mt:60},{w:150,h:130,mt:80}],
-    [{w:240,h:175,mt:25},{w:200,h:155,mt:45}],
-    [{w:300,h:185,mt:20}],
-  ];
-  const cfg=configs[Math.min(floatProds.length,3)-1]||configs[0];
-
-  floatProds.forEach((prod,i)=>{
-    const c=cfg[i]||cfg[0];
-    const fp=mkEl('div'); fp.className='cv-fp';
-    fp.style.cssText=`width:${c.w}px;height:${c.h}px;margin-top:${c.mt}px;clip-path:polygon(0 0,99% 0,100% 96%,96% 100%,4% 100%,0 96%);`;
-    const img=document.createElement('img'); img.src=prod.src; fp.appendChild(img);
-    mid.appendChild(fp);
-  });
-
-  // Texture fill
-  const txh=Math.round(105+Math.random()*30);
-  const txfill=mkEl('div'); txfill.className='cv-txfill';
-  txfill.style.cssText=`height:${txh}px;background:repeating-linear-gradient(90deg,${p[2]} 0,${p[2]} 1px,${p[1]} 1px,${p[1]} 5px,${p[2]} 5px,${p[2]} 6px,${p[1]} 6px,${p[1]} 10px),repeating-linear-gradient(0deg,rgba(0,0,0,0.06) 0,rgba(0,0,0,0.06) 1px,transparent 1px,transparent 7px);`;
-  const txlbl=mkEl('div'); txlbl.className='cv-txlbl';
-  txlbl.textContent=getMat(curStyle).split(' · ')[0]+' · 材质';
-  txfill.appendChild(txlbl); mid.appendChild(txfill);
-  card.appendChild(mid);
-
-  // Sep line
-  const sepY=midTop+200+8;
-  const sep=mkEl('div'); sep.className='cv-sep';
-  sep.style.cssText=`top:${sepY}px;background:${p[3]};opacity:0.18;`;
-  card.appendChild(sep);
-
-  // Palette row
-  const palY=sepY+8;
-  const palrow=mkEl('div'); palrow.className='cv-palrow';
-  palrow.style.top=palY+'px';
-  p.forEach(c=>{const d=mkEl('div');d.className='cv-pdot';d.style.background=c;palrow.appendChild(d);});
-  const plbl=mkEl('span'); plbl.className='cv-plbl'; plbl.style.color=p[3]; plbl.textContent='Colour Story';
-  palrow.appendChild(plbl); card.appendChild(palrow);
-
-  // Watermark
-  const wmY=palY+14;
-  const wm=mkEl('div'); wm.className='cv-wm';
-  wm.style.cssText=`top:${wmY}px;font-size:56px;color:rgba(80,50,20,0.05);`;
-  wm.textContent=brand.split(' ')[0]; card.appendChild(wm);
-
-  // Note card
-  const noteW=82, noteH=72;
-  const noteX=540-18-noteW-14;
-  const noteY=palY-10;
-  const note=mkEl('div'); note.className='cv-note';
-  note.style.cssText=`right:32px;top:${noteY}px;width:${noteW}px;height:${noteH}px;transform:rotate(1.2deg);`;
-  note.innerHTML=`<p>${getMotto(curStyle)}</p>`; card.appendChild(note);
-
-  // Style pill
-  const pill=mkEl('div'); pill.className='cv-pill';
-  pill.style.cssText=`bottom:${720*0.34+8}px;right:32px;background:${p[3]};color:${p[0]};`;
-  pill.textContent=`${curStyle} · ${SSUB[curStyle]||''}`;
-  card.appendChild(pill);
-
-  // ── Bottom strip 34% ──
-  const botH=Math.round(720*0.34);
-  const bot=mkEl('div'); bot.className='cv-bot';
-  bot.style.cssText=`height:${botH}px;background:${p[0]};`;
-
-  // Text col
-  const kws=getKws(curStyle);
-  const tc=mkEl('div'); tc.className='cv-botl';
-  tc.innerHTML=`
-    <div>
-      <div class="cv-botbrand">${brand.replace(' ','<br>')}</div>
-      <div class="cv-botsub">${document.getElementById('room').value.split(' ')[0]}</div>
-    </div>
-    <div style="width:20px;height:.5px;background:rgba(90,60,30,.25);"></div>
-    <div class="cv-kws">
-      ${kws.map(k=>`<div><div class="cv-kw-cn">${k.cn}</div><div class="cv-kw-en">${k.en}</div></div>`).join('')}
-    </div>
-    <div class="cv-matline">${getMat(curStyle)}</div>
-  `;
-  bot.appendChild(tc);
-
-  // Mini products (up to 5)
-  const minis=mkEl('div'); minis.className='cv-minis';
-  sel.slice(0,5).forEach((prod,i)=>{
-    const m=mkEl('div'); m.className='cv-mini';
-    m.style.background=i%2===1?`${p[1]}44`:p[0];
-    m.innerHTML=`
-      <span class="cv-mnum">${String(i+1).padStart(2,'0')}</span>
-      <img src="${prod.src}" alt="">
-      <div class="cv-mname">${prod.name.length>10?prod.name.slice(0,10)+'…':prod.name}</div>
-      <div class="cv-mcn">${prod.type}</div>
+  // 2. 交互式画布层 (这里是重点)
+  const canvasBoard = document.createElement('div');
+  canvasBoard.className = 'canvas-board';
+  
+  prods.forEach(p => {
+    const item = document.createElement('div');
+    item.className = 'canvas-item';
+    item.id = p.id;
+    // 赋予初始样式与数据坐标
+    item.style.width = p.w + 'px';
+    item.style.transform = `translate(${p.x}px, ${p.y}px)`;
+    item.style.zIndex = p.z;
+    item.setAttribute('data-x', p.x);
+    item.setAttribute('data-y', p.y);
+    
+    // 内部结构
+    item.innerHTML = `
+      <img src="${p.src}">
+      <div class="resize-handle"></div>
     `;
-    minis.appendChild(m);
+    canvasBoard.appendChild(item);
   });
-  bot.appendChild(minis);
+  card.appendChild(canvasBoard);
+
+  // 3. 调色盘与材质球展示层
+  const palY = 418 + 220; // 粗略算在画布下方
+  const palRow = document.createElement('div');
+  palRow.className = 'cv-palrow';
+  palRow.style.top = palY + 'px';
+  currentPalette.forEach(c => {
+    const d = document.createElement('div');
+    d.className = 'cv-pdot'; d.style.background = c;
+    palRow.appendChild(d);
+  });
+  card.appendChild(palRow);
+
+  // 渲染上传的材质球
+  if(materials.length > 0) {
+    const matRow = document.createElement('div');
+    matRow.className = 'cv-mat-render';
+    matRow.style.top = (palY - 6) + 'px';
+    materials.forEach(src => {
+      matRow.innerHTML += `<img src="${src}">`;
+    });
+    card.appendChild(matRow);
+  }
+
+  // 4. 底部清单区块
+  const bot = document.createElement('div');
+  bot.className = 'cv-bot';
+  bot.style.backgroundColor = currentPalette[0];
+  
+  let minisHTML = '';
+  prods.slice(0, 4).forEach((p, i) => {
+    minisHTML += `
+      <div class="cv-mini" style="background:${i%2===1 ? currentPalette[1]+'44' : 'transparent'};">
+        <img src="${p.src}">
+        <div class="cv-mname">${p.name}</div>
+      </div>
+    `;
+  });
+
+  bot.innerHTML = `
+    <div class="cv-botl">
+      <div>
+        <div style="font-family:'Cormorant Garamond'; font-size:16px;">FF&E<br>SCHEDULE</div>
+        <div style="font-size:7px; color:var(--brn); margin-top:4px;">${new Date().toLocaleDateString()}</div>
+      </div>
+    </div>
+    <div class="cv-minis">${minisHTML}</div>
+  `;
   card.appendChild(bot);
 
-  return card;
+  wrap.appendChild(card);
+  rp.appendChild(wrap);
+
+  // 点击空白处取消选中
+  document.addEventListener('pointerdown', (e) => {
+    if (!e.target.closest('.canvas-item')) {
+      document.querySelectorAll('.canvas-item').forEach(el => el.classList.remove('active'));
+    }
+  });
+
+  // 初始化 interact.js 拖拽与缩放
+  initInteractJS();
 }
 
 // ═══════════════════════════════════════════
-// PRODUCT PAGE
+// Interact.js 核心逻辑
 // ═══════════════════════════════════════════
-function mkPP(prod,idx,total){
-  const brand=document.getElementById('brand').value||'RH FACTORY';
-  const p=pal(curStyle);
-  const card=mkEl('div'); card.className='xcard'; card.style.background=p[0];
+function initInteractJS() {
+  interact('.canvas-item')
+    .draggable({
+      inertia: true,
+      modifiers: [
+        interact.modifiers.restrictRect({ restriction: 'parent', endOnly: true }) // 限制在容器内
+      ],
+      listeners: {
+        start(event) {
+          // 点击置顶并加高亮框
+          document.querySelectorAll('.canvas-item').forEach(el => el.classList.remove('active'));
+          event.target.classList.add('active');
+          maxZIndex += 1;
+          event.target.style.zIndex = maxZIndex;
+        },
+        move(event) {
+          const target = event.target;
+          const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+          const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+          
+          target.style.transform = `translate(${x}px, ${y}px)`;
+          target.setAttribute('data-x', x);
+          target.setAttribute('data-y', y);
+        }
+      }
+    })
+    .resizable({
+      edges: { left: false, right: '.resize-handle', bottom: '.resize-handle', top: false },
+      listeners: {
+        move: function (event) {
+          let target = event.target;
+          let x = (parseFloat(target.getAttribute('data-x')) || 0);
+          let y = (parseFloat(target.getAttribute('data-y')) || 0);
 
-  const pp=mkEl('div'); pp.className='pp'; card.appendChild(pp);
-
-  // Header
-  const hd=mkEl('div'); hd.className='pphd';
-  hd.style.background=p[0];
-  hd.innerHTML=`<span class="ppbrand">${brand} · Studio</span><span class="ppnum">${String(idx+1).padStart(2,'0')} / ${String(total).padStart(2,'0')}</span>`;
-  pp.appendChild(hd);
-
-  // Image zone
-  const iz=mkEl('div'); iz.className='ppimg';
-  iz.style.background=`radial-gradient(ellipse at 50% 42%,${p[1]}55 0%,transparent 62%),${p[0]}`;
-  iz.innerHTML=`
-    <span class="ppcat">${prod.type}</span>
-    <div class="ppdots">
-      <div class="ppdot" style="background:${p[3]};"></div>
-      <div class="ppdot" style="background:${p[2]};"></div>
-      <div class="ppdot" style="background:${p[1]};border:0.5px solid rgba(90,60,30,0.2);"></div>
-    </div>
-    <img src="${prod.src}" alt="${prod.name}">
-  `;
-  pp.appendChild(iz);
-
-  // Info
-  const info=mkEl('div'); info.className='ppinfo';
-
-  const left=mkEl('div'); left.className='ppl';
-  left.style.background=p[0];
-  left.innerHTML=`
-    <div>
-      <div class="ppcn">${prod.name}</div>
-      <div class="ppen">${prod.name}</div>
-      <div class="ppbtag">${brand}</div>
-      <div class="ppdiv"></div>
-      <div class="ppdesc">${getDesc(prod.name,prod.type,curStyle)}</div>
-    </div>
-    <div class="ppmatl">${getMat(curStyle)}</div>
-  `;
-
-  const right=mkEl('div'); right.className='ppr';
-  right.style.background=p[0];
-  right.innerHTML=`
-    <div>
-      <div class="pprl">Material &amp; Finish · 材质工艺</div>
-      <div class="pptags">${getTags(prod.type,curStyle).map(t=>`<span class="pptag">${t}</span>`).join('')}</div>
-    </div>
-    <div>
-      <div class="pprl">Style · 风格</div>
-      <div class="pptags"><span class="pptag">${curStyle}</span><span class="pptag">${SSUB[curStyle]||''}</span><span class="pptag">Quiet Luxury</span></div>
-    </div>
-    <div class="ppquote">${getQuote(curStyle)}</div>
-  `;
-
-  info.appendChild(left); info.appendChild(right); pp.appendChild(info);
-
-  // Footer
-  const ft=mkEl('div'); ft.className='ppft';
-  ft.innerHTML=`<span class="ppfb">${brand}</span><span class="ppft2">Soft Furnishing · Living Room</span>`;
-  pp.appendChild(ft);
-
-  return card;
+          // 更新宽度 (等比例高度由 CSS img 负责)
+          target.style.width = event.rect.width + 'px';
+          
+          target.style.transform = `translate(${x}px, ${y}px)`;
+          target.setAttribute('data-x', x);
+          target.setAttribute('data-y', y);
+        }
+      }
+    });
 }
 
 // ═══════════════════════════════════════════
-// PROMPTS
+// 一键导出逻辑 (html2canvas)
 // ═══════════════════════════════════════════
-function buildPts(sel,parent){
-  const brand=document.getElementById('brand').value||'RH FACTORY';
-  const room=document.getElementById('room').value;
-  const wall=document.getElementById('wall').value;
-  const floor=document.getElementById('floor').value;
-  const light=document.getElementById('light').value;
-  const plant=document.getElementById('plant').value;
-  const extra=document.getElementById('extra').value.trim();
-  const guide=GUIDE[curStyle]||curStyle;
-  const plist=sel.map((p,i)=>`  Image ${i+1}: ${p.name} (${p.type})`).join('\n');
-  const half=Math.ceil(sel.length/2);
-  const r1=sel.slice(0,half).map((p,i)=>`  ${i+1}. ${p.name} — ${p.type}`).join('\n');
-  const r2=sel.slice(half).map((p,i)=>`  ${half+i+1}. ${p.name} — ${p.type}`).join('\n');
-
-  const pts=[
-    {lbl:'Step 1 · 空场景背景图',tag:'→ Gemini / ChatGPT',txt:`生成一张写实室内空场景，不含任何家具和装饰品。
-
-Style: ${guide}
-Room: ${room.split(' ')[0]}
-Walls: ${wall.split(' — ')[0]}
-Floor: ${floor.split(' — ')[0]}
-Lighting: ${light.split(' — ')[0]}
-Plants: ${plant.split(' — ')[0]}
-Viewpoint: Straight-on, slightly elevated, wide angle
-Ratio: 3:4 portrait (900×1200px)
-
-The room must be completely empty — background plate for compositing.
-No text, no watermark.${extra?'\nExtra: '+extra:''}`},
-    {lbl:'Step 2 · 产品去背',tag:'→ remove.bg / ChatGPT',txt:`对以下产品图逐一去除背景，输出透明背景PNG。
-不得改变产品的颜色、形状、材质、比例，原图100%保留。
-
-${plist}`},
-    {lbl:'Step 3 · 合成Moodboard',tag:'→ GPT-4o（上传背景图+所有产品图）',txt:`上传${sel.length+1}张图：
-- Image 1: 空场景背景（不得修改）
-- Images 2–${sel.length+1}: 去背产品PNG
-
-═══ 上方58%：生活场景 ═══
-按真实室内设计逻辑摆放产品：
-- 沙发靠墙或浮置，前方留过道
-- 茶几在沙发正前方45cm
-- 落地灯立于沙发或椅旁
-- 吊灯从天花板垂下，位于座区中央正上方
-- 地毯平铺于地面座区下，绝对不能挂在墙上
-- 挂画挂在墙上，视线高度（150cm），绝对不能放地上
-
-摆放产品：
-${plist}
-
-产品形态颜色材质LOCKED，不得修改。
-
-═══ 下方42%：产品目录 ═══
-浅暖白底 #F8F6F2，虚线边框
-第一行：${r1}
-第二行：${r2}
-每格：白底，产品居中，左上角数字编号，中英文标签
-
-═══ 品牌 ═══
-左上：「${brand}」大号衬线体
-左上副标：「Living room option」斜体小字
-右上：「Living room soft decoration design scheme」细体
-${extra?'特别要求：'+extra:''}
-
-输出：3:4竖版900×1200px，高级杂志质感`},
-  ];
-
-  pts.forEach(pt=>{
-    const box=mkEl('div'); box.className='pout';
-    box.innerHTML=`
-      <div class="pohd">
-        <div style="display:flex;align-items:center;gap:7px;">
-          <span class="polbl">${pt.lbl}</span>
-          <span class="potag">${pt.tag}</span>
-        </div>
-        <button class="pocopy" onclick="cpTxt(this,'${encodeURIComponent(pt.txt)}')">复制</button>
-      </div>
-      <div class="potext">${pt.txt}</div>
-    `;
-    parent.appendChild(box);
+function exportToImage(wrapEl) {
+  const card = wrapEl.querySelector('.xcard');
+  const btn = wrapEl.querySelector('.dlbtn');
+  
+  // 截图前准备：隐藏按钮，取消选中状态去掉边框
+  btn.style.display = 'none';
+  document.querySelectorAll('.canvas-item').forEach(el => el.classList.remove('active'));
+  
+  // 使用 html2canvas 渲染
+  html2canvas(card, {
+    scale: 2, // 2倍超清导出 (1080x1440)
+    useCORS: true,
+    backgroundColor: null
+  }).then(canvas => {
+    // 恢复按钮显示
+    btn.style.display = 'block';
+    
+    // 触发下载
+    const link = document.createElement('a');
+    link.download = `RH_Factory_Moodboard_${Date.now()}.png`;
+    link.href = canvas.toDataURL('image/png', 1.0);
+    link.click();
+  }).catch(err => {
+    alert("导出失败，请检查上传的图片是否跨域或过大。");
+    btn.style.display = 'block';
   });
 }
 
-function cpTxt(btn,enc){
-  navigator.clipboard.writeText(decodeURIComponent(enc)).then(()=>{
-    btn.textContent='已复制 ✓';btn.classList.add('ok');
-    setTimeout(()=>{btn.textContent='复制';btn.classList.remove('ok');},2400);
-  });
-}
-
-// ═══════════════════════════════════════════
-// HELPERS
-// ═══════════════════════════════════════════
-function mkEl(tag){return document.createElement(tag);}
-
-function howToExport(){
-  alert('导出 900×1200 PNG 方法：\n\n① Chrome 打开此页面\n② 右键点击卡片 → "检查"\n③ 在 Elements 面板找到 .xcard 节点\n④ 右键节点 → "Capture node screenshot"\n⑤ 自动保存为精准 900×1200 PNG\n\n（注：工具里显示的是60%缩放预览，导出时会得到真实900×1200尺寸）');
-}
-
-// ═══════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════
-fillScene('法式清新');
 </script>
 </body>
 </html>
