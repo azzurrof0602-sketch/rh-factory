@@ -382,53 +382,61 @@
     downloadCanvas(cvs, '2_Asset_SpriteSheet.png');
   }
 
-  // ── C. Topological Prompt Generator ──
+  // ── C. Topological Prompt Generator (Upgraded Semantic Version) ──
   function buildTopologicalPrompt() {
     const style = document.getElementById('envStyle').value;
     const room = document.getElementById('envRoom').value;
 
-    // 1. Map current positions on Canvas
-    // Sort items by Z-index to know back-to-front layers
-    const sortedProds = [...prods].sort((a, b) => {
-      const elA = document.getElementById(a.id);
-      const elB = document.getElementById(b.id);
-      return parseInt(elA.style.zIndex) - parseInt(elB.style.zIndex);
-    });
-
     let spatialRules = "";
-    sortedProds.forEach((p, index) => {
+    
+    // 我们不需要纯粹按 Z-index 排序了，因为我们有了语义引擎
+    prods.forEach((p, index) => {
       const el = document.getElementById(p.id);
       const x = parseFloat(el.getAttribute('data-x'));
       const y = parseFloat(el.getAttribute('data-y'));
       const w = parseFloat(el.style.width);
       const h = el.offsetHeight;
       
-      // Calculate Center Point relative to Canvas (540x720)
+      // 计算中心点坐标 (基于 540x720 画布)
       const cx = x + (w / 2);
       const cy = y + (h / 2);
 
-      // Horizontal mapping
+      // 1. X轴：水平方位
       let hPos = "Center";
-      if(cx < CANVAS_W * 0.33) hPos = "Left side";
-      else if(cx > CANVAS_W * 0.66) hPos = "Right side";
+      if(cx < CANVAS_W * 0.38) hPos = "Left side";
+      else if(cx > CANVAS_W * 0.62) hPos = "Right side";
 
-      // Vertical / Depth mapping (in interior, higher Y = closer to camera/foreground)
+      // 2. Y轴：透视深度 (在 2D 画布里，Y越小越靠后，Y越大越靠前)
       let vPos = "Midground";
-      if(cy < CANVAS_H * 0.4) vPos = "Background (further away)";
-      else if(cy > CANVAS_H * 0.7) vPos = "Foreground (closest to camera)";
+      if(cy < CANVAS_H * 0.45) vPos = "Background (further away)";
+      else if(cy > CANVAS_H * 0.65) vPos = "Foreground (closest to camera)";
 
-      // Find original index for SpriteSheet referencing
+      // 3. 语义深度感知 (Semantic Depth Recognition) - 核心修复点！
+      let semanticPlacement = "";
+      const typeLower = p.type.toLowerCase();
+      const nameLower = p.name.toLowerCase();
+      const combined = typeLower + " " + nameLower;
+
+      if (combined.includes('light') || combined.includes('chandelier') || combined.includes('吊灯')) {
+          semanticPlacement = `Hanging strictly from the ceiling, positioned directly above the ${hPos} area.`;
+      } else if (combined.includes('rug') || combined.includes('carpet') || combined.includes('地毯')) {
+          semanticPlacement = `Lying perfectly flat on the floor in the ${hPos}, acting as the absolute base ground layer.`;
+      } else if (combined.includes('art') || combined.includes('painting') || combined.includes('mirror') || combined.includes('画') || combined.includes('镜')) {
+          semanticPlacement = `Mounted flush on the wall in the ${hPos}, at human eye-level.`;
+      } else if (combined.includes('model') || combined.includes('person') || combined.includes('人') || combined.includes('模')) {
+          semanticPlacement = `Standing on the floor in the ${hPos}, ${vPos}. (Use this human as the absolute scale reference for all furniture).`;
+      } else {
+          // 常规落地家具（沙发、椅子、桌子、柜子）
+          semanticPlacement = `Placed firmly on the floor in the ${hPos}, ${vPos}.`;
+      }
+
+      // 找到在 SpriteSheet 中的原始编号
       const originalIdx = prods.findIndex(orig => orig.id === p.id) + 1;
 
-      // Layering text based on sorted array (later in array = front)
-      let layerText = index === 0 ? "Base layer (farthest back)" : 
-                      index === sortedProds.length - 1 ? "Top layer (frontmost)" : 
-                      "Middle layer";
-
-      spatialRules += `- [Asset ${originalIdx}] ${p.name} (${p.type}): Placed in the **${hPos}, ${vPos}**. (${layerText})\n`;
+      spatialRules += `- [Asset ${originalIdx}] ${p.name} (${p.type}): ${semanticPlacement}\n`;
     });
 
-    // 2. Build the massive Prompt
+    // 构建终极约束提示词 (包含透视修正与人体工学比例)
     return `I am providing TWO reference images to generate a highly realistic, photorealistic 3D interior render.
 
 IMAGE 1 [1_Layout_Reference.png]: The 2D structural composition. You MUST use this as a STRICT spatial blueprint.
@@ -442,20 +450,18 @@ ENVIRONMENT & MOOD
 - Camera: Eye-level perspective, interior architectural photography, 85mm lens, photorealistic lighting with global illumination and soft ambient occlusion.
 
 ================================================================
-STRICT SPATIAL TOPOLOGY (Do not deviate from this layout)
+SEMANTIC SPATIAL TOPOLOGY (Do not deviate from this layout)
 ================================================================
 Based on the provided 2D blueprint, place the assets in 3D space exactly as described below:
 
 ${spatialRules}
 
 ================================================================
-PHYSICS & LOGIC CONSTRAINTS (Crucial for realism)
+PHYSICS, SCALE & PERSPECTIVE (Crucial for realism)
 ================================================================
-- ALL rugs/carpets must lie completely flat on the floor. NEVER on walls or floating.
-- ALL ceiling lights/chandeliers must hang from the ceiling down.
-- ALL floor lamps, sofas, and tables must sit firmly on the floor/rug.
-- Adjust the scale of the items to be realistic relative to a human scale in a ${room}.
-- Maintain the exact colors and materials shown in the Asset Sheet.
+- PERSPECTIVE CORRECTION: The 2D assets in Image 2 may have slightly different orthographic or high-angle perspectives. You MUST correct these perspective distortions so that ALL objects share a single, unified 3D vanishing point matching the room's camera angle.
+- ERGONOMIC SCALE: Furniture proportions must be perfectly realistic. A standard dining/lounge chair seat is ~45cm high; a dining table is ~75cm high. If a human model is present, scale ALL furniture strictly relative to her height to avoid "miniature" effects.
+- GRAVITY: Floor items must touch the floor. Ceiling items must hang from the ceiling. NO floating objects.
 
 GENERATE THE PHOTOREALISTIC 3D RENDER NOW.`;
   }
